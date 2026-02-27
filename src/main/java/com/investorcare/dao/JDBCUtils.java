@@ -18,7 +18,7 @@ public class JDBCUtils {
     public static final Connection getConnection() throws ClassNotFoundException, SQLException {
         Connection conn = null;
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");// load driver
-        String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=InvestorCare;encrypt=false;trustServerCertificate=true";
+        String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=INVESTORCARE;encrypt=false;trustServerCertificate=true";
         conn = DriverManager.getConnection(url, "sa", "12345");
         return conn;
     }

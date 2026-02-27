@@ -6,63 +6,56 @@ package com.investorcare.controller;
 
 import com.investorcare.dao.UserDAO;
 import com.investorcare.model.User;
-import java.io.IOException;;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author DELL
+ * @author pc
  */
-@WebServlet(name = "loginController", urlPatterns = {"/loginController"})
-public class loginController extends HttpServlet {
+@WebServlet(name = "UserManagementController", urlPatterns = {"/UserManagementController"})
+public class UserManagementController extends HttpServlet {
 
-    private final static String USER_MANAGEMENT = "userManagement.jsp";
-    private final static String TICKER_MANAGEMENT = "tickerManagement.jsp";
+ 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = "login.jsp";
-        
-        try{
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
+        String url = "userManagement.jsp";
+        try {
+            String role = request.getParameter("role");
             UserDAO userDao = new UserDAO();
-            User loginUser = userDao.checkLogin(username, password);
-            
-            if(loginUser != null){
-                HttpSession session = request.getSession();
-                session.setAttribute("LOGIN_USER", loginUser);
-                session.setAttribute("ROLE", loginUser.getRole());
-                if("Admin".equalsIgnoreCase(loginUser.getRole())){
-                    url = USER_MANAGEMENT;
-                }else{
-                    url = TICKER_MANAGEMENT;
-                }
+            ArrayList<User> listUser;
+            if(role != null && !role.isEmpty()){
+                listUser = userDao.searchUsers(role);
             }else{
-                request.setAttribute("ERROR", "Incorrect Username or Password!");
+                listUser = userDao.selectAll();
             }
-        }catch(Exception e){
-            log("Error at loginController" + e.toString());
+            
+            request.setAttribute("LIST_USER", listUser);
+        } catch (Exception e) {
+            log("Error at UserManagementController: " + e.toString());
         }
         request.getRequestDispatcher(url).forward(request, response);
     }
 
+   
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+   
 }

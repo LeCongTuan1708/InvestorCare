@@ -21,21 +21,40 @@
         crossorigin="anonymous"></script>
     </head>
     <body>
+        <%
+            String error = (String) request.getAttribute("ERROR");
+            error = error != null ? error : "";
+        %>
+        
         <div class="container">
             <div class="row d-flex justify-content-center align-items-center vh-100">
                 <div class="col-md-4">
                     <form action="MainController" class="card shadow p-4 bg-white">
                         <label for="" class="form-check-label text-center fs-3"><b>Sign up</b></label>
+                        <div style="color: red"><%=error%></div>
+                        
                         <label for="" class="mt-2 mb-2">Username</label>
-                        <input type="text" name="tenDangNhap" class=" form-control p-2" placeholder="Enter username...">
+                        <input type="text" name="username" value="<%=request.getParameter("username")!= null ? request.getParameter("username") : ""%>"
+                               class=" form-control p-2" placeholder="Enter username...">
+                        
                         <label for="" class="mt-2 mb-2">Password</label>
-                        <input type="password" name="matKhau" class=" form-control p-2" placeholder="Enter password...">
+                        <input type="password" name="password" value="<%=request.getParameter("password")!= null ? request.getParameter("password") : ""%>"
+                               class=" form-control p-2" placeholder="Enter password...">
+                        
                         <label for="" class="mt-2 mb-2">Re-enter password</label>
-                        <input type="password" name="matKhau" class=" form-control p-2" placeholder="Enter password...">
+                        <input type="password" name="confirmPassword" value="<%=request.getParameter("confirmPassword")!= null ? request.getParameter("confirmPassword") : ""%>"
+                               class=" form-control p-2" placeholder="Enter confirmPassword...">
+                        
                         <label for="" class="mt-2 mb-2">Email</label>
-                        <input type="email" name="matKhau" class=" form-control p-2" placeholder="Enter email...">
-                        <button class="btn btn-dark mt-3" type="submit" name="action" value="login">Sign up
+                        <input type="email" name="email" value="<%=request.getParameter("email")!= null ? request.getParameter("email") : ""%>" 
+                               class=" form-control p-2" placeholder="Enter email...">
+                        
+                        <button class="btn btn-dark mt-3" type="submit" name="action" value="signup">Sign up
                         </button>
+                        
+                        <p class="text-center pt-3 m-0">Đã có tài khoản? 
+                        <a href="login.jsp" style="color: black">Đăng nhập</a>
+                    </p>
                     </form>
                 </div>
             </div>

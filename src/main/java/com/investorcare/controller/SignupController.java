@@ -1,68 +1,64 @@
+package com.investorcare.controller;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package com.investorcare.controller;
 
 import com.investorcare.dao.UserDAO;
 import com.investorcare.model.User;
-import java.io.IOException;;
+import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author DELL
+ * @author pc
  */
-@WebServlet(name = "loginController", urlPatterns = {"/loginController"})
-public class loginController extends HttpServlet {
+@WebServlet(urlPatterns = {"/SignupController"})
+public class SignupController extends HttpServlet {
 
-    private final static String USER_MANAGEMENT = "userManagement.jsp";
-    private final static String TICKER_MANAGEMENT = "tickerManagement.jsp";
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = "login.jsp";
-        
-        try{
+        String url = "signup.jsp";
+        try {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            UserDAO userDao = new UserDAO();
-            User loginUser = userDao.checkLogin(username, password);
+            String confirmPassword = request.getParameter("confirmPassword");
+            String email = request.getParameter("email");
             
-            if(loginUser != null){
-                HttpSession session = request.getSession();
-                session.setAttribute("LOGIN_USER", loginUser);
-                session.setAttribute("ROLE", loginUser.getRole());
-                if("Admin".equalsIgnoreCase(loginUser.getRole())){
-                    url = USER_MANAGEMENT;
-                }else{
-                    url = TICKER_MANAGEMENT;
-                }
+            if(!password.equals(confirmPassword)){
+                request.setAttribute("ERROR", "Password or ConfirmPassword incorrect!");
             }else{
-                request.setAttribute("ERROR", "Incorrect Username or Password!");
+                UserDAO userDao = new UserDAO();
+                User newUser = new User(0, username, email, password, "User", "Active", null);
+                if(userDao.singUp(newUser)){
+                    url = "login.jsp";
+                }
             }
-        }catch(Exception e){
-            log("Error at loginController" + e.toString());
+        } catch (Exception e) {
+            log("Error at SignupController: " + e.toString());
         }
         request.getRequestDispatcher(url).forward(request, response);
     }
 
+ 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+   
 }
