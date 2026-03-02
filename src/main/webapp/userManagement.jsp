@@ -1,187 +1,159 @@
-<%-- 
-    Document   : userManagement
-    Created on : Jan 31, 2026, 3:03:22 PM
-    Author     : DELL
---%>
-
 <%@page import="java.util.List"%>
 <%@page import="com.investorcare.model.User"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="dark">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
-                integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y"
-        crossorigin="anonymous"></script>
+        <title>User Management</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     </head>
-    <body>
-        <nav class="navbar navbar-expand-lg bg-light navbar-light">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-between align-items-center w-100">
-                    <h3 class="mb-0">Truck Stock Advisor - Admin Panel</h3>
-
-                    <div class="collapse navbar-collapse">
-                        <ul class="navbar-nav mx-auto">
+    <body class="bg-black text-light">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <nav class="bg-dark border-end border-secondary-subtle position-fixed shadow" style="width: 280px; min-height: 100vh;">
+                    <div class="p-4">
+                        <h4 class="text-info fw-bold mb-4 d-flex align-items-center">
+                            <i class="bi bi-graph-up me-2"></i> 
+                            <div>
+                                Investor Care
+                                <span class="fs-6 text-secondary fw-normal d-block">Admin Panel</span>
+                            </div>
+                        </h4>
+                        <hr class="text-secondary">
+                        <ul class="nav flex-column gap-2">
                             <li class="nav-item">
-                                <a href="MainController?action=user-list" class="nav-link active px-3">User</a>
+                                <a class="nav-link active text-info fw-bold py-3 px-3 bg-secondary bg-opacity-10 rounded" href="MainController?action=user-list">
+                                    <i class="bi bi-people me-2"></i> User Management
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a href="MainController?action=asset-search" class="nav-link px-3">Tickers</a>
-                            </li>
-<!--                            <li class="nav-item">
-                                <a href="#" class="nav-link px-3">Alert</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link px-3">Explanation</a>
+                                <a class="nav-link text-secondary py-3 px-3 rounded" href="MainController?action=asset-search">
+                                    <i class="bi bi-graph-up-arrow me-2"></i> Assets Management
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link px-3">Dashboard</a>
-                            </li>-->
+                                <a class="nav-link text-secondary py-3 px-3 rounded" href="#">
+                                    <i class="bi bi-gear me-2"></i> Settings
+                                </a>
+                            </li>
                         </ul>
-
-                        <form action="MainController" method="post" class="mb-0">
-                            <input type="hidden" name="action" value="logout">
-                            <button class="btn btn-dark">Log out</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <!-- CONTENT -->
-        <div class="container mt-4">
-
-            <!-- SEARCH + FILTER FORM -->
-            <form action="MainController" method="POST">
-
-                <!-- action cho controller -->
-                <input type="hidden" name="action" value="user-list">
-
-                <div class="row mb-4">
-                    <%
-                        String currentKeyword = (String) request.getAttribute("CURRENT_KEYWORD");
-                        currentKeyword = (currentKeyword != null) ? currentKeyword : "";
-                    %>
-                    <!-- SEARCH -->
-                    <div class="col-md-6">
-                        <div class="d-flex mb-3 mb-md-0">
-                            <input
-                                class="shadow-sm form-control me-2"
-                                type="search"
-                                name="keyword"
-                                placeholder="Search for users..."
-                                value="<%=currentKeyword%>">
-                            <button class="btn btn-dark" type="submit">Search</button>
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3">
+                            <form action="MainController" method="post">
+                                <input type="hidden" name="action" value="logout">
+                                <button class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2">
+                                    <i class="bi bi-box-arrow-right"></i> Log out
+                                </button>
+                            </form>
                         </div>
                     </div>
+                </nav>
 
-<!--                     ADD USER 
-                    <div class="col-md-6 d-flex justify-content-end align-items-start">
-                        <a href="MainController?action=add-user-form" class="btn btn-dark">
-                            Add New User
-                        </a>
-                    </div>-->
+                <main class="px-md-4 py-4" style="margin-left: 280px; width: calc(100% - 280px);">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom border-secondary">
+                        <h1 class="h2 text-info fw-bold">User Management</h1>
+                    </div>
 
-                    <!-- FILTER -->
-                    <div class="col-12 mt-3">
-                        <div class="d-flex gap-3">
-                            <%
-                                // Lấy role hiện tại đang được filter từ request
-                                String currentRole = request.getParameter("role");
-                                currentRole = (currentRole == null) ? "" : currentRole;
-                            %>
-                            <div style="min-width: 150px;">
-                                <label class="form-label small fw-bold text-muted">Filter by Role</label>
-                                <select name="role" class="form-select form-select-sm shadow-sm" onchange="this.form.submit()">
-                                    <option value="" <%= currentRole.equals("") ? "selected" : ""%>>All Roles</option>
-                                    <option value="Admin" <%= currentRole.equals("Admin") ? "selected" : ""%>>Admin</option>
-                                    <option value="User" <%= currentRole.equals("User") ? "selected" : ""%>>User</option>
-                                </select>
-                            </div>
-
+                    <div class="card bg-dark border-secondary mb-4 shadow-sm">
+                        <div class="card-body">
+                            <form action="MainController" method="POST" class="row g-3">
+                                <input type="hidden" name="action" value="user-list">
                                 
                                 <%
-                                    // Lấy trạng thái đang được chọn từ request để giữ nguyên ô select
-                                    String currentStatus = request.getParameter("status");
-                                    currentStatus = (currentStatus == null) ? "" : currentStatus;
+                                    String currentKeyword = (String) request.getAttribute("CURRENT_KEYWORD");
+                                    currentKeyword = (currentKeyword != null) ? currentKeyword : "";
                                 %>
-                            <div style="min-width: 150px;">
-                                <label class="form-label small fw-bold text-muted">Filter by Status</label>
-                                <select name="status" class="form-select form-select-sm shadow-sm" onchange="this.form.submit()">
-                                    <option value="" <%=currentStatus.equals("") ? "selected" : "" %>>All Status</option>
-                                    <option value="Active" <%=currentStatus.equals("Active") ? "selected" : "" %>>Active</option>
-                                    <option value="Inactive" <%=currentStatus.equals("Inactive") ? "selected" : "" %>>Inactive</option>
-                                </select>
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-info">SEARCH USERS</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-black border-secondary text-info"><i class="bi bi-search"></i></span>
+                                        <input type="search" name="keyword" class="form-control bg-black text-white border-secondary" 
+                                               placeholder="Search by username..." value="<%=currentKeyword%>">
+                                        <button class="btn btn-info text-dark fw-bold" type="submit">SEARCH</button>
+                                    </div>
+                                </div>
 
+                                <div class="col-md-3">
+                                    <%
+                                        String currentRole = request.getParameter("role");
+                                        currentRole = (currentRole == null) ? "" : currentRole;
+                                    %>
+                                    <label class="form-label small fw-bold text-info">ROLE</label>
+                                    <select name="role" class="form-select bg-black text-white border-secondary" onchange="this.form.submit()">
+                                        <option value="" <%= currentRole.equals("") ? "selected" : ""%>>All Roles</option>
+                                        <option value="Admin" <%= currentRole.equals("Admin") ? "selected" : ""%>>Admin</option>
+                                        <option value="User" <%= currentRole.equals("User") ? "selected" : ""%>>User</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <%
+                                        String currentStatus = request.getParameter("status");
+                                        currentStatus = (currentStatus == null) ? "" : currentStatus;
+                                    %>
+                                    <label class="form-label small fw-bold text-info">STATUS</label>
+                                    <select name="status" class="form-select bg-black text-white border-secondary" onchange="this.form.submit()">
+                                        <option value="" <%=currentStatus.equals("") ? "selected" : "" %>>All Status</option>
+                                        <option value="Active" <%=currentStatus.equals("Active") ? "selected" : "" %>>Active</option>
+                                        <option value="Inactive" <%=currentStatus.equals("Inactive") ? "selected" : "" %>>Inactive</option>
+                                    </select>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
-                </div>
-            </form>
-
-
-            <!-- TABLE -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">User Management</h5>
-                </div>
-
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="ps-3">ID</th>
-                                    <th>Username</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Created_at</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <%
-                                    List<User> listUser = (List<User>) request.getAttribute("LIST_USER");
-
-                                    if (listUser != null) {
-                                        for (User user : listUser) {
-                                %>
-
-
-                                <tr>
-                                    <td class="ps-3"><%=user.getUserId()%></td>
-                                    <td><%=user.getUsername()%></td>
-                                    <td><span class="badge bg-info text-dark"><%=user.getRole()%></span></td>
-                                    <td><span class="badge bg-success"><%=user.getStatus()%></span></td>
-                                    <td><span class="badge bg-primary"><%=user.getLastLogin()%></span></td>
-                                    <td>
-                                        <a href="MainController?action=edit-user&userId=<%=user.getUserId()%>" 
-                                           class="btn btn-sm btn-outline-secondary">Edit</a>
-                                    </td>
-                                </tr>
-
-                                <%
+                    <div class="card border-secondary bg-dark shadow-sm">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover align-middle mb-0">
+                                <thead class="table-active text-info border-bottom border-secondary">
+                                    <tr>
+                                        <th class="ps-3 py-3">ID</th>
+                                        <th>USERNAME</th>
+                                        <th>ROLE</th>
+                                        <th>STATUS</th>
+                                        <th>CREATED AT</th>
+                                        <th class="text-center">INFO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        List<User> listUser = (List<User>) request.getAttribute("LIST_USER");
+                                        if (listUser != null) {
+                                            for (User user : listUser) {
+                                    %>
+                                    <tr class="border-bottom border-secondary-subtle">
+                                        <td class="ps-3 text-secondary small align-middle">#<%=user.getUserId()%></td>
+                                        <td class="fw-bold align-middle"><%=user.getUsername()%></td>
+                                        <td class="align-middle">
+                                            <span class="badge text-dark fw-bold bg-primary"><%=user.getRole()%></span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span class="badge rounded-pill <%= user.getStatus().equals("Active") ? "bg-success" : "bg-danger" %>">
+                                                <%=user.getStatus()%>
+                                            </span>
+                                        </td>
+                                        <td class="text-light small align-middle"><%=user.getLastLogin()%></td>
+                                        <td class="text-center align-middle">
+                                            <a href="MainController?action=edit-user&userId=<%=user.getUserId()%>" 
+                                               class="btn btn-outline-info rounded-circle d-inline-flex align-items-center justify-content-center p-0 shadow-sm"
+                                               style="width: 20px; height: 20px;">
+                                                <i class="bi bi-info-lg"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <%
+                                            }
                                         }
-                                    }
-
-                                %>
-                            </tbody>
-
-                        </table>
+                                    %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                </main>
             </div>
-
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

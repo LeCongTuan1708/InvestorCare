@@ -32,9 +32,9 @@
             <version>12.2.0.jre8</version> 
         </dependency>
         <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>mssql-jdbc</artifactId>
-            <version>9.4.1.jre8</version> 
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
         </dependency>
     </dependencies>
 
@@ -87,5 +87,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

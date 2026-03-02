@@ -12,4 +12,14 @@
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
+    <servlet>
+    <servlet-name>TestPriceServlet</servlet-name>
+    <servlet-class>com.investorcare.controller.TestPriceServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>TestPriceServlet</servlet-name>
+    <url-pattern>/test-price</url-pattern>
+</servlet-mapping>
+
 </web-app>

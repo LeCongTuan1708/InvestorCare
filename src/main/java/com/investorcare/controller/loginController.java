@@ -43,6 +43,7 @@ public class loginController extends HttpServlet {
                 }else{
                     response.sendRedirect(TICKER_MANAGEMENT); 
                 }
+                return;
             }else{
                 request.setAttribute("ERROR", "Incorrect Username or Password!");
             }
