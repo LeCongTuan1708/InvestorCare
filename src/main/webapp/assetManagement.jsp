@@ -7,196 +7,211 @@
 <%@page import="java.sql.Timestamp"%>
 <%@page import="com.investorcare.model.Asset"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="java.time.LocalDateTime"%>
+<%@page import="java.time.ZoneId"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="dark">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
-                integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y"
-        crossorigin="anonymous"></script>
+        <title>Ticker Management</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <style>
+            .custom-sidebar {
+                width: 280px; 
+                min-height: 100vh;
+            }
+            .main-content {
+                margin-left: 280px;
+                width: calc(100% - 280px);
+            }
+            .table th, .table td {
+                vertical-align: middle;
+            }
+        </style>
     </head>
-    <body>
-        <nav class="navbar navbar-expand-lg bg-light navbar-light">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-between align-items-center w-100">
-                    <h3 class="mb-0">Truck Stock Advisor - Admin Panel</h3>
+    <body class="bg-black text-light">
 
-                    <div class="collapse navbar-collapse">
-                        <ul class="navbar-nav mx-auto">
+        <div class="container-fluid p-0">
+            <div class="d-flex">
+                <nav class="custom-sidebar bg-dark border-end border-secondary-subtle position-fixed shadow">
+                    <div class="p-4">
+                        <h4 class="text-info fw-bold mb-4 d-flex align-items-center">
+                            <i class="bi bi-graph-up me-2"></i> 
+                            <div>
+                                Invenster Care
+                                <span class="fs-6 text-secondary fw-normal d-block">Admin Panel</span>
+                            </div>
+                        </h4>
+
+                        <hr class="text-secondary">
+
+                        <ul class="nav flex-column gap-2">
                             <li class="nav-item">
-                                <a href="#" class="nav-link px-3">User</a>
+                                <a class="nav-link text-secondary py-3 px-3 rounded" href="MainController?action=user-list">
+                                    <i class="bi bi-people me-2"></i> User Management
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a href="" class="nav-link px-3">Assets</a>
+                                <a class="nav-link active text-info fw-bold py-3 px-3 bg-secondary bg-opacity-10 rounded" href="">
+                                    <i class="bi bi-graph-up-arrow me-2"></i> Assets Management
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link px-3">Alert</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link px-3">Explanation</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link px-3">Dashboard</a>
+                                <a class="nav-link text-secondary py-3 px-3 rounded" href="#">
+                                    <i class="bi bi-gear me-2"></i> Settings
+                                </a>
                             </li>
                         </ul>
 
-                        <form action="MainController" method="post" class="mb-0">
-                            <input type="hidden" name="action" value="logout">
-                            <button class="btn btn-dark">Log out</button>
-                        </form>
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3">
+                            <form action="MainController" method="post">
+                                <input type="hidden" name="action" value="logout">
+                                <button class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2">
+                                    <i class="bi bi-box-arrow-right"></i> Log out
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </nav>
+                </nav>
 
-        <div class="container mt-4">
-            <%
-                String oldKeyword = (request.getAttribute("oldKeyword") != null) ? (String) request.getAttribute("oldKeyword") : "";
-                String oldStatus = (request.getAttribute("oldStatus") != null) ? (String) request.getAttribute("oldStatus") : "";
-                String oldVisible = (request.getAttribute("oldVisible") != null) ? (String) request.getAttribute("oldVisible") : "";
-            %>
-            <form action="MainController" method="post">
-
-                <input type ="hidden" name="action" value="asset-search">
-
-                <div class="row mb-4">
-
-                    <div class="col-md-6">
-                        <div class="d-flex mb-3 mb-md-0">
-                            <input
-                                class="shadow-sm form-control me-2"
-                                type="search"
-                                name="keyword" value="<%= oldKeyword%>"
-                                placeholder="Search for ticker..."
-                                >
-                            <button class="btn btn-dark" type="submit">Search</button>
+                <main class="main-content px-md-4 py-4">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom border-secondary">
+                        <h1 class="h2 text-info fw-bold">Asset Management</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <a href="MainController?action=add-asset-button" class="btn btn-success fw-bold shadow-sm">
+                                <i class="bi bi-plus-circle me-1"></i> Add New Ticker
+                            </a>
                         </div>
                     </div>
 
-                    <div class="col-md-6 d-flex justify-content-end align-items-start">
-                        <a href="MainController?action=add-asset-button" class="btn btn-dark">
-                            Add New Ticker
-                        </a>
-                    </div>
+                    <%
+                        String oldKeyword = (request.getAttribute("oldKeyword") != null) ? (String) request.getAttribute("oldKeyword") : "";
+                        String oldStatus = (request.getAttribute("oldStatus") != null) ? (String) request.getAttribute("oldStatus") : "";
+                        String oldVisible = (request.getAttribute("oldVisible") != null) ? (String) request.getAttribute("oldVisible") : "";
+                    %>
 
-                    <div class="col-12 mt-3">
-                        <div class="d-flex gap-3">
+                    <div class="card bg-dark border-secondary mb-4 shadow-sm">
+                        <div class="card-body">
+                            <form action="MainController" method="post" class="row g-3">
+                                <input type ="hidden" name="action" value="asset-search">
 
-                            <div style="min-width: 150px;">
-                                <label class="form-label small fw-bold text-muted">Filter by Status</label>
-                                <select name="status" class="form-select form-select-sm shadow-sm" onchange="this.form.submit()">
-                                    <option value="">All</option>
-                                    <option value="Active" <%= (oldStatus.equals("Active")) ? "selected" : ""%>>Active</option>
-                                    <option value="Inactive" <%= (oldStatus.equals("Inactive")) ? "selected" : ""%>>Inactive</option>
-                                </select>
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-info">SEARCH BY SYMBOL OR NAME</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-black border-secondary text-info"><i class="bi bi-search"></i></span>
+                                        <input type="search" name="keyword" value="<%= oldKeyword%>" 
+                                               class="form-control bg-black text-white border-secondary" 
+                                               placeholder="Search for ticker...">
+                                        <button class="btn btn-info text-dark fw-bold" type="submit">SEARCH</button>
+                                    </div>
+                                </div>
 
-                            <div style="min-width: 150px;">
-                                <label class="form-label small fw-bold text-muted">Filter by Visible</label>
-                                <select name="visible" class="form-select form-select-sm shadow-sm" onchange="this.form.submit()">
-                                    <option value="">All</option>
-                                    <option value="1" <%= (oldVisible.equals("1")) ? "selected" : ""%>>Yes</option>
-                                    <option value="0" <%= (oldVisible.equals("0")) ? "selected" : ""%>>No</option>
-                                </select>
-                            </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-bold text-info">STATUS</label>
+                                    <select name="status" class="form-select bg-black text-white border-secondary" onchange="this.form.submit()">
+                                        <option value="">All</option>
+                                        <option value="Active" <%= (oldStatus.equals("Active")) ? "selected" : ""%>>Active</option>
+                                        <option value="Inactive" <%= (oldStatus.equals("Inactive")) ? "selected" : ""%>>Inactive</option>
+                                    </select>
+                                </div>
 
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-bold text-info">VISIBILITY</label>
+                                    <select name="visible" class="form-select bg-black text-white border-secondary" onchange="this.form.submit()">
+                                        <option value="">All</option>
+                                        <option value="1" <%= (oldVisible.equals("1")) ? "selected" : ""%>>Visible</option>
+                                        <option value="0" <%= (oldVisible.equals("0")) ? "selected" : ""%>>Hidden</option>
+                                    </select>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
-                </div>
-            </form>
-
-
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">Ticker Management</h5>
-                </div>
-
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="ps-3">Ticker</th>
-                                    <th>Company Name</th>
-                                    <th>Exchange</th>
-                                    <th>Data Status</th>
-                                    <th>Last Update</th>
-                                    <th>Status</th>
-                                    <th>Visible</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-
-
-                            <tbody>
-                                <%
-                                    ArrayList<Asset> list = (request.getAttribute("list") != null) ? (ArrayList<Asset>) request.getAttribute("list") : new ArrayList<Asset>();
-                                    for (Asset asset : list) {
-                                        String symbol = asset.getSymbol();
-                                        String name = asset.getName();
-                                        String status = asset.getStatus();
-                                        String visible = asset.isVisible() == true ? "Visible" : "Hidden";
-                                        String exchange = asset.getExchange();
-                                        Timestamp last_update = asset.getUpdatedAt();
-                                %>
-                                <tr>
-                                    <td class="ps-3"><%= symbol%></td>
-                                    <td><%= name%></td>
-                                    <td><%= exchange%></td>
-                                    <td>
-                                        <%
-                                            Timestamp updated = asset.getUpdatedAt();//lấy thời gian hiện tại
-                                            if (updated == null) {
-                                        %>
-                                        <span class="badge bg-secondary">Not Initialized</span>
-                                        <%
-                                        } else {
-                                            //lấy khoảnh cách thời gian chênh lệch
-                                            long diff = System.currentTimeMillis() - updated.getTime();
-                                            //đổi miligiay sang số ngày
-                                            long days = diff / (1000 * 60 * 60 * 24);
-
-                                            if (days <= 1) {
-                                        %>
-                                        <span class="badge bg-success">Healthy</span>
-                                        <%
-                                        } else if (days <= 3) {
-                                        %>
-                                        <span class="badge bg-warning text-dark">Stale</span>
-                                        <%
-                                        } else {
-                                        %>
-                                        <span class="badge bg-danger">Outdated</span>
-                                        <%
+                    <div class="card border-secondary bg-dark shadow-sm">
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover align-middle mb-0">
+                                <thead class="table-active text-info border-bottom border-secondary">
+                                    <tr>
+                                        <th class="ps-3 py-3">TICKER</th>
+                                        <th>COMPANY NAME</th>
+                                        <th>EXCHANGE</th>
+                                        <th>HEALTH</th>
+                                        <th>LAST UPDATE</th>
+                                        <th>STATUS</th>
+                                        <th class="text-center">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        ArrayList<Asset> list = (request.getAttribute("list") != null) ? (ArrayList<Asset>) request.getAttribute("list") : new ArrayList<Asset>();
+                                        for (Asset asset : list) {
+                                            String symbol = asset.getSymbol();
+                                            String name = asset.getName();
+                                            String status = asset.getStatus();
+                                            boolean isVisible = asset.isVisible();
+                                            String exchange = asset.getExchange();
+                                            Timestamp last_update = asset.getUpdatedAt();
+                                    %>
+                                    <tr class="border-bottom border-secondary-subtle">
+                                        <td class="ps-3 fw-bold text-info"><%= symbol%></td>
+                                        <td><%= name%></td>
+                                        <td><span class="badge border border-secondary text-secondary fw-normal"><%= exchange%></span></td>
+                                        <td>
+                                            <%
+                                                if (last_update == null) {
+                                            %>
+                                            <span class="badge bg-secondary opacity-50">Not Initialized</span>
+                                            <%
+                                                } else {
+                                                    long diff = System.currentTimeMillis() - last_update.getTime();
+                                                    long days = diff / (1000 * 60 * 60 * 24);
+                                                    if (days <= 1) { %>
+                                            <span class="badge bg-success bg-opacity-75">Healthy</span>
+                                            <% } else if (days <= 3) { %>
+                                            <span class="badge bg-warning text-dark">Stale</span>
+                                            <% } else { %>
+                                            <span class="badge bg-danger">Outdated</span>
+                                            <%      }
                                                 }
-                                            }
-                                        %>
-                                    </td>
-                                    <td><%= last_update%></td>
-                                    <td><span class="badge bg-info text-dark"><%= status%></span></td>
-                                    <td><span class="badge bg-success"><%= visible%></span></td>
-                                    <td>
-                                        <a href="MainController?action=edit-asset&assetId=<%= asset.getAssetId() %>" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                    </td>
-                                </tr>
-                                <%}%>
-                            </tbody>
-
-                        </table>
+                                            %>
+                                        </td>
+                                        <td class="text-secondary small">
+                                            <%
+                                                if (last_update != null) {
+                                                    LocalDateTime ldt = last_update.toInstant()
+                                                            .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
+                                                            .toLocalDateTime();
+                                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                                                    out.print(ldt.format(formatter));
+                                                } else {
+                                                    out.print("N/A");
+                                                }
+                                            %>
+                                        </td>
+                                        <td>
+                                            <span class="badge rounded-pill <%= status.equals("Active") ? "bg-info text-dark" : "bg-dark border border-secondary text-secondary"%>">
+                                                <%= status%>
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="MainController?action=edit-asset&assetId=<%= asset.getAssetId()%>" 
+                                               class="btn btn-sm btn-outline-info">
+                                                <i class="bi bi-pencil-square"></i> Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <%}%>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                </main>
             </div>
-
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
