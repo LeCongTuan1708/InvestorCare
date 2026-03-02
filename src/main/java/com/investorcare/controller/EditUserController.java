@@ -38,12 +38,14 @@ public class EditUserController extends HttpServlet {
                 String email = request.getParameter("email");
                 String role = request.getParameter("role");
                 String status = request.getParameter("status");
+                String password =request.getParameter("password");
                 
                 User userUpdate = new User();
                 userUpdate.setUserId(userId);
                 userUpdate.setEmail(email);
                 userUpdate.setRole(role);
                 userUpdate.setStatus(status);
+                userUpdate.setPassword(password);
                 userDao.updateUser(userUpdate);
                 url = "MainController?action=user-list";
             }

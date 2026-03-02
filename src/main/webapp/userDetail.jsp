@@ -1,36 +1,44 @@
-<%-- 
-    Document   : userDetail
-    Created on : Jan 31, 2026, 3:07:26 PM
-    Author     : DELL
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="dark">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
-                integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y"
-        crossorigin="anonymous"></script>
+        <title>User Details - Admin Panel</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     </head>
-    <body class="bg-light">
+    <body class="bg-black text-light">
+        <nav class="navbar navbar-expand-lg bg-dark border-bottom border-secondary shadow">
+            <div class="container-fluid">
+                <h4 class="text-info fw-bold mb-0 me-4">
+                    <i class="bi bi-graph-up me-2"></i> Invenster Care
+                </h4>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a href="MainController?action=user-list" class="nav-link active text-info fw-bold px-3">User Management</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="MainController?action=asset-search" class="nav-link text-secondary px-3">Assets Management</a>
+                        </li>
+                    </ul>
+                    <form action="MainController" method="post" class="mb-0">
+                        <input type="hidden" name="action" value="logout">
+                        <button class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-box-arrow-right"></i> Log out
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
 
         <div class="container py-5">
             <div class="row justify-content-center">
-                <div class="col-lg-10">
-
-                    <div class="card shadow-sm border-0 rounded-3 p-2">
-
+                <div class="col-lg-8">
+                    <div class="card bg-dark border-secondary shadow-lg">
                         <%
                             com.investorcare.model.User u = (com.investorcare.model.User) request.getAttribute("USER_INFO");
-                            if(u == null){
+                            if (u == null) {
                                 response.sendRedirect("MainController?action=user-list");
                                 return;
                             }
@@ -38,80 +46,81 @@
                         <form action="MainController" method="POST">
                             <input type="hidden" name="action" value="update-user"> 
                             <input type="hidden" name="userId" value="<%=u.getUserId()%>"> 
-                            <div class="card-header bg-white py-3 border-bottom">
+
+                            <div class="card-header border-secondary py-3">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <h5 class="mb-0 fw-bold text-dark fs-2">User Details</h5>
+                                        <h5 class="mb-0 fw-bold text-info text-uppercase">
+                                            <i class="bi bi-person-gear me-2"></i>User Configuration
+                                        </h5>
                                     </div>
                                     <div class="col-auto">
-                                        <button type="button"
-                                                class="btn btn-outline-secondary  px-4 me-2">Cancel</button>
-                                        <button type="submit" class="btn btn-dark px-4">Save changes</button>
+                                        <a href="MainController?action=user-list" class="btn btn-outline-secondary btn-sm px-3 me-2">Cancel</a>
+                                        <button type="submit" class="btn btn-info text-dark fw-bold btn-sm px-4">SAVE CHANGES</button>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="card-body p-4">
                                 <div class="row g-4">
-
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label
-                                                class="form-label fw-semibold small text-uppercase text-muted">Username</label>
-                                                <input type="text" class="form-control form-control-lg bg-light" value="<%=u.getUsername()%>"
-                                                       readonly="" style="font-size: 0.9rem;">
+                                            <label class="form-label small fw-bold text-info text-uppercase">Username</label>
+                                            <input type="text" class="form-control bg-black text-secondary border-secondary" 
+                                                   value="<%=u.getUsername()%>" readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold text-info text-uppercase">Email Address</label>
+                                            <input type="email" class="form-control bg-black text-white border-secondary" 
+                                                   name="email" value="<%=u.getEmail()%>">
                                         </div>
                                         <div class="mb-0">
-                                            <label class="form-label fw-semibold small text-uppercase text-muted">Email
-                                                Address</label>
-                                            <input type="email" class="form-control form-control-lg bg-light" name="email"
-                                                   value="<%=u.getEmail()%>" style="font-size: 0.9rem;">
+                                            <label class="form-label small fw-bold text-info text-uppercase">Password</label>
+                                            <input type="text" class="form-control bg-black text-white border-secondary" 
+                                                   name="password" value="<%=u.getPassword()%>">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 ps-md-5">
                                         <div class="mb-4">
-                                            <label
-                                                class="form-label fw-semibold small text-uppercase text-muted d-block">Role</label>
+                                            <label class="form-label small fw-bold text-info text-uppercase d-block">Role</label>
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="role" id="admin" value="Admin"
-                                                           <%="Admin".equals(u.getRole())?"checked":""%>>
+                                                           <%="Admin".equals(u.getRole()) ? "checked" : ""%>>
                                                     <label class="form-check-label" for="admin">Admin</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="role" id="user" value="User"
-                                                           <%="User".equals(u.getRole())?"checked":""%>>
+                                                           <%="User".equals(u.getRole()) ? "checked" : ""%>>
                                                     <label class="form-check-label" for="user">User</label>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div>
-                                            <label
-                                                class="form-label fw-semibold small text-uppercase text-muted d-block">Status</label>
+                                            <label class="form-label small fw-bold text-info text-uppercase d-block">Status</label>
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="status" id="active" value="Active"
-                                                           <%="Active".equals(u.getStatus())?"checked":""%>>
+                                                           <%="Active".equals(u.getStatus()) ? "checked" : ""%>>
                                                     <label class="form-check-label" for="active">Active</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="status" id="inactive" value="Inactive"
-                                                           <%="Inactive".equals(u.getStatus())?"checked":""%>>
+                                                           <%="Inactive".equals(u.getStatus()) ? "checked" : ""%>>
                                                     <label class="form-check-label" for="inactive">Inactive</label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
         </div>
-    </body>y>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>

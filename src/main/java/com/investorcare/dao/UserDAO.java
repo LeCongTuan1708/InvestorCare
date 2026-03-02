@@ -176,14 +176,15 @@ public class UserDAO {
     public boolean updateUser(User user){
         Connection conn = null;
         PreparedStatement pst = null;
-        String sql = "UPDATE [USER] SET EMAIL = ?, ROLE = ?, STATUS = ? WHERE USER_ID = ?";
+        String sql = "UPDATE [USER] SET EMAIL = ?, PASSWORD = ?, ROLE = ?, STATUS = ? WHERE USER_ID = ?";
         try {
             conn = JDBCUtils.getConnection();
             pst = conn.prepareStatement(sql);
             pst.setString(1, user.getEmail());
-            pst.setString(2, user.getRole());
-            pst.setString(3, user.getStatus());
-            pst.setInt(4, user.getUserId());
+            pst.setString(2, user.getPassword());
+            pst.setString(3, user.getRole());
+            pst.setString(4, user.getStatus());
+            pst.setInt(5, user.getUserId());
             return pst.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
