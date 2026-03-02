@@ -1,9 +1,3 @@
-<%-- 
-    Document   : tickerManagement
-    Created on : Jan 31, 2026, 3:04:01 PM
-    Author     : DELL
---%>
-
 <%@page import="java.sql.Timestamp"%>
 <%@page import="com.investorcare.model.Asset"%>
 <%@page import="java.util.ArrayList"%>
@@ -18,25 +12,11 @@
         <title>Ticker Management</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-        <style>
-            .custom-sidebar {
-                width: 280px; 
-                min-height: 100vh;
-            }
-            .main-content {
-                margin-left: 280px;
-                width: calc(100% - 280px);
-            }
-            .table th, .table td {
-                vertical-align: middle;
-            }
-        </style>
     </head>
     <body class="bg-black text-light">
-
         <div class="container-fluid p-0">
             <div class="d-flex">
-                <nav class="custom-sidebar bg-dark border-end border-secondary-subtle position-fixed shadow">
+                <nav class="bg-dark border-end border-secondary-subtle position-fixed shadow" style="width: 280px; min-height: 100vh;">
                     <div class="p-4">
                         <h4 class="text-info fw-bold mb-4 d-flex align-items-center">
                             <i class="bi bi-graph-up me-2"></i> 
@@ -45,9 +25,7 @@
                                 <span class="fs-6 text-secondary fw-normal d-block">Admin Panel</span>
                             </div>
                         </h4>
-
                         <hr class="text-secondary">
-
                         <ul class="nav flex-column gap-2">
                             <li class="nav-item">
                                 <a class="nav-link text-secondary py-3 px-3 rounded" href="MainController?action=user-list">
@@ -65,7 +43,6 @@
                                 </a>
                             </li>
                         </ul>
-
                         <div class="position-absolute bottom-0 start-0 w-100 p-3">
                             <form action="MainController" method="post">
                                 <input type="hidden" name="action" value="logout">
@@ -77,7 +54,7 @@
                     </div>
                 </nav>
 
-                <main class="main-content px-md-4 py-4">
+                <main class="px-md-4 py-4" style="margin-left: 280px; width: calc(100% - 280px);">
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom border-secondary">
                         <h1 class="h2 text-info fw-bold">Asset Management</h1>
                         <div class="btn-toolbar mb-2 mb-md-0">
@@ -97,7 +74,6 @@
                         <div class="card-body">
                             <form action="MainController" method="post" class="row g-3">
                                 <input type ="hidden" name="action" value="asset-search">
-
                                 <div class="col-md-6">
                                     <label class="form-label small fw-bold text-info">SEARCH BY SYMBOL OR NAME</label>
                                     <div class="input-group">
@@ -108,7 +84,6 @@
                                         <button class="btn btn-info text-dark fw-bold" type="submit">SEARCH</button>
                                     </div>
                                 </div>
-
                                 <div class="col-md-3">
                                     <label class="form-label small fw-bold text-info">STATUS</label>
                                     <select name="status" class="form-select bg-black text-white border-secondary" onchange="this.form.submit()">
@@ -117,7 +92,6 @@
                                         <option value="Inactive" <%= (oldStatus.equals("Inactive")) ? "selected" : ""%>>Inactive</option>
                                     </select>
                                 </div>
-
                                 <div class="col-md-3">
                                     <label class="form-label small fw-bold text-info">VISIBILITY</label>
                                     <select name="visible" class="form-select bg-black text-white border-secondary" onchange="this.form.submit()">
@@ -135,13 +109,14 @@
                             <table class="table table-dark table-hover align-middle mb-0">
                                 <thead class="table-active text-info border-bottom border-secondary">
                                     <tr>
-                                        <th class="ps-3 py-3">TICKER</th>
-                                        <th>COMPANY NAME</th>
-                                        <th>EXCHANGE</th>
-                                        <th>HEALTH</th>
-                                        <th>LAST UPDATE</th>
-                                        <th>STATUS</th>
-                                        <th class="text-center">ACTION</th>
+                                        <th class="ps-3 py-3 align-middle">TICKER</th>
+                                        <th class="align-middle">COMPANY NAME</th>
+                                        <th class="align-middle">EXCHANGE</th>
+                                        <th class="align-middle">HEALTH</th>
+                                        <th class="align-middle">LAST UPDATE</th>
+                                        <th class="align-middle">STATUS</th>
+                                        <th class="align-middle">VISIBLE</th>
+                                        <th class="text-center align-middle">INFO</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -152,54 +127,55 @@
                                             String name = asset.getName();
                                             String status = asset.getStatus();
                                             boolean isVisible = asset.isVisible();
+                                            String visible = isVisible ? "Visible" : "Hidden";
                                             String exchange = asset.getExchange();
                                             Timestamp last_update = asset.getUpdatedAt();
                                     %>
                                     <tr class="border-bottom border-secondary-subtle">
-                                        <td class="ps-3 fw-bold text-info"><%= symbol%></td>
-                                        <td><%= name%></td>
-                                        <td><span class="badge border border-secondary text-secondary fw-normal"><%= exchange%></span></td>
-                                        <td>
-                                            <%
-                                                if (last_update == null) {
-                                            %>
-                                            <span class="badge bg-secondary opacity-50">Not Initialized</span>
-                                            <%
-                                                } else {
-                                                    long diff = System.currentTimeMillis() - last_update.getTime();
-                                                    long days = diff / (1000 * 60 * 60 * 24);
-                                                    if (days <= 1) { %>
+                                        <td class="ps-3 fw-bold text-info align-middle"><%= symbol%></td>
+                                        <td class="align-middle"><%= name%></td>
+                                        <td class="align-middle">
+                                            <span class="badge border border-secondary text-secondary fw-normal text-uppercase"><%= exchange%></span>
+                                        </td>
+                                        <td class="align-middle">
+                                            <% if (last_update == null) { %>
+                                            <span class="badge bg-secondary opacity-50">N/A</span>
+                                            <% } else {
+                                                long diff = System.currentTimeMillis() - last_update.getTime();
+                                                long days = diff / (1000 * 60 * 60 * 24);
+                                                if (days <= 1) { %>
                                             <span class="badge bg-success bg-opacity-75">Healthy</span>
                                             <% } else if (days <= 3) { %>
                                             <span class="badge bg-warning text-dark">Stale</span>
                                             <% } else { %>
                                             <span class="badge bg-danger">Outdated</span>
-                                            <%      }
-                                                }
-                                            %>
+                                            <% }
+                                                } %>
                                         </td>
-                                        <td class="text-secondary small">
-                                            <%
-                                                if (last_update != null) {
-                                                    LocalDateTime ldt = last_update.toInstant()
-                                                            .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
-                                                            .toLocalDateTime();
+                                        <td class="text-secondary small align-middle">
+                                            <% if (last_update != null) {
+                                                    LocalDateTime ldt = last_update.toInstant().atZone(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDateTime();
                                                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                                                     out.print(ldt.format(formatter));
                                                 } else {
-                                                    out.print("N/A");
-                                                }
-                                            %>
+                                                    out.print("<span class='text-muted'>-</span>");
+                                                }%>
                                         </td>
-                                        <td>
+                                        <td class="align-middle">
                                             <span class="badge rounded-pill <%= status.equals("Active") ? "bg-info text-dark" : "bg-dark border border-secondary text-secondary"%>">
                                                 <%= status%>
                                             </span>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="align-middle">
+                                            <span class="badge rounded-pill <%= isVisible ? "bg-success" : "bg-warning text-dark"%>">
+                                                <%= visible%>
+                                            </span>
+                                        </td>
+                                        <td class="text-center align-middle">
                                             <a href="MainController?action=edit-asset&assetId=<%= asset.getAssetId()%>" 
-                                               class="btn btn-sm btn-outline-info">
-                                                <i class="bi bi-pencil-square"></i> Edit
+                                               class="btn btn-outline-info rounded-circle d-inline-flex align-items-center justify-content-center p-0 shadow-sm"
+                                               style="width: 20px; height: 20px;">
+                                                <i class="bi bi-info"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -211,7 +187,6 @@
                 </main>
             </div>
         </div>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
