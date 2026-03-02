@@ -27,7 +27,8 @@ public class AssetDAO implements DAOInterface<Asset> {
     private static final String SELECT_ALL = "SELECT * from ASSET WHERE 1=1";
     private static final String SELECT = "SELECT * FROM ASSET WHERE (SYMBOL LIKE ? OR NAME LIKE ?)";
     private static final String SELECT_ID = "SELECT * FROM ASSET WHERE ASSET_ID = ? ";
-    private static final String INSERT = "INSERT INTO ASSET(TYPE,SYMBOL,EXCHANGE,NAME,STATUS) VALUES(?,?,?,?,?)";
+    private static final String SELECT_NAME= "SELECT * FROM ASSET WHERE NAME = ? ";
+    private static final String INSERT = "INSERT INTO ASSET(TYPE,SYMBOL,EXCHANGE,NAME,STATUS,VISIBLE,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)";
     private static final String UPDATE = "UPDATE ASSET set TYPE = ?, SYMBOL = ?, EXCHANGE = ?, NAME = ?, STATUS =?,VISIBLE = ?, updated_at = SYSDATETIME() WHERE ASSET_ID = ?";
 
     public ArrayList<Asset> selectAll() throws ClassNotFoundException, SQLException {
@@ -87,6 +88,9 @@ public class AssetDAO implements DAOInterface<Asset> {
             pst.setString(3, t.getExchange());
             pst.setString(4, t.getName());
             pst.setString(5, t.getStatus());
+            pst.setBoolean(6, t.isVisible());
+            pst.setTimestamp(7, t.getCreatedAt());
+            pst.setTimestamp(8, t.getUpdatedAt());
             kq = pst.executeUpdate();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(AssetDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -221,6 +225,36 @@ public class AssetDAO implements DAOInterface<Asset> {
             }
         }
         return kq;
+    }
+    public int selectByName(String t) throws ClassNotFoundException, SQLException {
+        int dem = 0;
+        Connection conn = null;
+        PreparedStatement pst = null;
+        try {
+            conn = JDBCUtils.getConnection();
+
+            pst = conn.prepareStatement(SELECT_NAME);
+            pst.setString(1, t);
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                dem++;
+                
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AssetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AssetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (pst != null) {
+                pst.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return dem;
     }
 
     public ArrayList<Asset> searchAssetByStatusAndVisible(String keyword, String s, String v) throws ClassNotFoundException, SQLException {

@@ -42,6 +42,19 @@ public class Asset {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
+    public Asset(String type, String symbol, String exchange, String name, String status, boolean visible, Timestamp createdAt, Timestamp updatedAt) {
+        this.type = type;
+        this.symbol = symbol;
+        this.exchange = exchange;
+        this.name = name;
+        this.status = status;
+        this.visible = visible;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+    
+    
     
 
     public int getAssetId() {
