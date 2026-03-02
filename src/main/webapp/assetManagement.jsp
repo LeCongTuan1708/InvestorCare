@@ -21,7 +21,7 @@
                         <h4 class="text-info fw-bold mb-4 d-flex align-items-center">
                             <i class="bi bi-graph-up me-2"></i> 
                             <div>
-                                Invenster Care
+                                Invenstor Care
                                 <span class="fs-6 text-secondary fw-normal d-block">Admin Panel</span>
                             </div>
                         </h4>
@@ -35,11 +35,6 @@
                             <li class="nav-item">
                                 <a class="nav-link active text-info fw-bold py-3 px-3 bg-secondary bg-opacity-10 rounded" href="">
                                     <i class="bi bi-graph-up-arrow me-2"></i> Assets Management
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-secondary py-3 px-3 rounded" href="#">
-                                    <i class="bi bi-gear me-2"></i> Settings
                                 </a>
                             </li>
                         </ul>

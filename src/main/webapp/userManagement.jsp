@@ -34,11 +34,6 @@
                                     <i class="bi bi-graph-up-arrow me-2"></i> Assets Management
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-secondary py-3 px-3 rounded" href="#">
-                                    <i class="bi bi-gear me-2"></i> Settings
-                                </a>
-                            </li>
                         </ul>
                         <div class="position-absolute bottom-0 start-0 w-100 p-3">
                             <form action="MainController" method="post">
@@ -109,12 +104,12 @@
                             <table class="table table-dark table-hover align-middle mb-0">
                                 <thead class="table-active text-info border-bottom border-secondary">
                                     <tr>
-                                        <th class="ps-3 py-3">ID</th>
-                                        <th>USERNAME</th>
-                                        <th>ROLE</th>
-                                        <th>STATUS</th>
-                                        <th>CREATED AT</th>
-                                        <th class="text-center">INFO</th>
+                                        <th class="ps-2 py-3">ID</th>
+                                        <th class="ps-2 py-3">USERNAME</th>
+                                        <th class="ps-2 py-3">ROLE</th>
+                                        <th class="ps-2 py-3">STATUS</th>
+                                        <th class="ps-2 py-3">CREATED AT</th>
+                                        <th class="ps-2 py-3 text-center">INFO</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -124,7 +119,7 @@
                                             for (User user : listUser) {
                                     %>
                                     <tr class="border-bottom border-secondary-subtle">
-                                        <td class="ps-3 text-secondary small align-middle">#<%=user.getUserId()%></td>
+                                        <td class="ps-2 text-secondary small align-middle">#<%=user.getUserId()%></td>
                                         <td class="fw-bold align-middle"><%=user.getUsername()%></td>
                                         <td class="align-middle">
                                             <span class="badge text-dark fw-bold bg-primary"><%=user.getRole()%></span>
