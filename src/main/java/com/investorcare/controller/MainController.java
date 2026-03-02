@@ -27,20 +27,19 @@ public class MainController extends HttpServlet {
     private static final String SIGNUP_CONTROLLER = "SignupController";
     private static final String USER_LIST = "user-list";
     private static final String USER_MANAGEMENT = "UserManagementController";
-    
+    private static final String EDIT_USER = "edit-user";
+    private static final String UPDATE_USER = "update-user";
+    private static final String EDIT_USER_CONTROLLER = "EditUserController";
 
     private static final String SEARCH_ASSET = "asset-search";
     private static final String SEARCH_ASSET_Controller = "AssetListController";
-
-    private static final String ADD_ASSET_BUTTON = "add-asset-button";
-    private static final String ADD_ASSET_JSP = "insertAsset.jsp";
-    
     private static final String ADD_ASSET = "add-asset";
     private static final String ADD_ASSET_Controller = "addAssetController";
-    
     private static final String EDIT_ASSET = "edit-asset";
+    private static final String EDIT_ASSET_controller = "editAssetController";
+    private static final String ADD_ASSET_BUTTON = "add-asset-button";
+    private static final String ADD_ASSET_JSP = "insertAsset.jsp";
     private static final String EDIT_ASSET_Controller = "editAssetController";
-    
     private static final String LOGOUT = "logout";
     private static final String LOGOUT_Controller = "logoutController";
 
@@ -58,21 +57,18 @@ public class MainController extends HttpServlet {
             } else if (ADD_ASSET_BUTTON.equals(action)) {
                 url = ADD_ASSET_JSP;
             } else if (ADD_ASSET.equals(action)) {
-                url = ADD_ASSET_Controller;
-            
+                url = ADD_ASSET_Controller;     
             } else if (EDIT_ASSET.equals(action)) {
                 url = EDIT_ASSET_Controller;
-            }
-            else if(SIGNUP.equals(action)){
+            } else if(SIGNUP.equals(action)){
                 url = SIGNUP_CONTROLLER;
-            }
-            else if(USER_LIST.equals(action)){
+            }else if(USER_LIST.equals(action)){
                 url = USER_MANAGEMENT;
-            }
-            else if(LOGOUT.equals(action)){
+            }else if(EDIT_USER.equals(action) || UPDATE_USER.equals(action)){
+                url = EDIT_USER_CONTROLLER;
+            }else if(LOGOUT.equals(action)){
                 url = LOGOUT_Controller;
-            }
-            else{
+            }else{
                 request.setAttribute("ERROR", "Your action not support");
             }
         } catch (Exception e) {

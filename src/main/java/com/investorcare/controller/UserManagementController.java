@@ -28,16 +28,19 @@ public class UserManagementController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String url = "userManagement.jsp";
         try {
+            String keyword =(String) request.getParameter("keyword");
             String role = request.getParameter("role");
+            String status = request.getParameter("status");
             UserDAO userDao = new UserDAO();
             ArrayList<User> listUser;
-            if(role != null && !role.isEmpty()){
-                listUser = userDao.searchUsers(role);
+            if(role != null && !role.isEmpty() || status != null && !status.isEmpty() || keyword != null && !keyword.trim().isEmpty()){
+                listUser = userDao.searchUsers(keyword, role, status);
             }else{
                 listUser = userDao.selectAll();
             }
             
             request.setAttribute("LIST_USER", listUser);
+            request.setAttribute("CURRENT_KEYWORD", keyword != null ? keyword : "");
         } catch (Exception e) {
             log("Error at UserManagementController: " + e.toString());
         }

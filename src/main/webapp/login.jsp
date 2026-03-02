@@ -27,7 +27,7 @@
         <div class="container">
             <div class="row d-flex justify-content-center align-items-center vh-100">
                 <div class="col-md-4">
-                    <form action="MainController" class="card shadow p-4 bg-white">
+                    <form action="MainController" class="card shadow p-4 bg-white" method="POST">
                         <input type="hidden" name="action" value="login">
                         <label for="" class="form-check-label text-center fs-3"><b>Sign in</b></label>
                         <div style="color: red"><%=error%></div>

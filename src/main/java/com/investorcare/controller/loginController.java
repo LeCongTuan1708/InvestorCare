@@ -21,8 +21,8 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "loginController", urlPatterns = {"/loginController"})
 public class loginController extends HttpServlet {
 
-    private final static String USER_MANAGEMENT = "userManagement.jsp";
-    private final static String TICKER_MANAGEMENT = "tickerManagement.jsp";
+    private final static String USER_MANAGEMENT = "MainController?action=user-list";
+    private final static String TICKER_MANAGEMENT = "MainController?action=asset-search";
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -39,10 +39,11 @@ public class loginController extends HttpServlet {
                 session.setAttribute("LOGIN_USER", loginUser);
                 session.setAttribute("ROLE", loginUser.getRole());
                 if("Admin".equalsIgnoreCase(loginUser.getRole())){
-                    url = USER_MANAGEMENT;
+                    response.sendRedirect(USER_MANAGEMENT);
                 }else{
-                    url = TICKER_MANAGEMENT;
+                    response.sendRedirect(TICKER_MANAGEMENT); 
                 }
+                return;
             }else{
                 request.setAttribute("ERROR", "Incorrect Username or Password!");
             }

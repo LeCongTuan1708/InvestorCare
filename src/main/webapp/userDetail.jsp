@@ -28,7 +28,16 @@
 
                     <div class="card shadow-sm border-0 rounded-3 p-2">
 
-                        <form action="">
+                        <%
+                            com.investorcare.model.User u = (com.investorcare.model.User) request.getAttribute("USER_INFO");
+                            if(u == null){
+                                response.sendRedirect("MainController?action=user-list");
+                                return;
+                            }
+                        %>
+                        <form action="MainController" method="POST">
+                            <input type="hidden" name="action" value="update-user"> 
+                            <input type="hidden" name="userId" value="<%=u.getUserId()%>"> 
                             <div class="card-header bg-white py-3 border-bottom">
                                 <div class="row align-items-center">
                                     <div class="col">
@@ -49,14 +58,14 @@
                                         <div class="mb-3">
                                             <label
                                                 class="form-label fw-semibold small text-uppercase text-muted">Username</label>
-                                            <input type="text" class="form-control form-control-lg bg-light" value="acb"
-                                                   style="font-size: 0.9rem;">
+                                                <input type="text" class="form-control form-control-lg bg-light" value="<%=u.getUsername()%>"
+                                                       readonly="" style="font-size: 0.9rem;">
                                         </div>
                                         <div class="mb-0">
                                             <label class="form-label fw-semibold small text-uppercase text-muted">Email
                                                 Address</label>
-                                            <input type="email" class="form-control form-control-lg bg-light"
-                                                   value="acb@gmail.com" style="font-size: 0.9rem;">
+                                            <input type="email" class="form-control form-control-lg bg-light" name="email"
+                                                   value="<%=u.getEmail()%>" style="font-size: 0.9rem;">
                                         </div>
                                     </div>
 
@@ -66,12 +75,13 @@
                                                 class="form-label fw-semibold small text-uppercase text-muted d-block">Role</label>
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="role" id="admin"
-                                                           checked>
+                                                    <input class="form-check-input" type="radio" name="role" id="admin" value="Admin"
+                                                           <%="Admin".equals(u.getRole())?"checked":""%>>
                                                     <label class="form-check-label" for="admin">Admin</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="role" id="user">
+                                                    <input class="form-check-input" type="radio" name="role" id="user" value="User"
+                                                           <%="User".equals(u.getRole())?"checked":""%>>
                                                     <label class="form-check-label" for="user">User</label>
                                                 </div>
                                             </div>
@@ -82,13 +92,14 @@
                                                 class="form-label fw-semibold small text-uppercase text-muted d-block">Status</label>
                                             <div class="d-flex gap-4">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="status" id="active"
-                                                           checked>
+                                                    <input class="form-check-input" type="radio" name="status" id="active" value="Active"
+                                                           <%="Active".equals(u.getStatus())?"checked":""%>>
                                                     <label class="form-check-label" for="active">Active</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="status" id="blocked">
-                                                    <label class="form-check-label" for="blocked">Blocked</label>
+                                                    <input class="form-check-input" type="radio" name="status" id="inactive" value="Inactive"
+                                                           <%="Inactive".equals(u.getStatus())?"checked":""%>>
+                                                    <label class="form-check-label" for="inactive">Inactive</label>
                                                 </div>
                                             </div>
                                         </div>

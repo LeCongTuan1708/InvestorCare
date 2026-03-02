@@ -32,19 +32,12 @@
                     <div class="collapse navbar-collapse">
                         <ul class="navbar-nav mx-auto">
                             <li class="nav-item">
-                                <a href="#" class="nav-link active px-3">User</a>
+                                <a href="MainController?action=user-list" class="nav-link active px-3">User</a>
                             </li>
                             <li class="nav-item">
+
                                 <a href="MainController?action=asset-search" class="nav-link px-3">Asset</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link px-3">Alert</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link px-3">Explanation</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link px-3">Dashboard</a>
+                                <a href="MainController?action=asset-search" class="nav-link px-3">Tickers</a>
                             </li>
                         </ul>
 
@@ -61,13 +54,16 @@
         <div class="container mt-4">
 
             <!-- SEARCH + FILTER FORM -->
-            <form action="MainController" method="get">
+            <form action="MainController" method="POST">
 
                 <!-- action cho controller -->
                 <input type="hidden" name="action" value="user-list">
 
                 <div class="row mb-4">
-
+                    <%
+                        String currentKeyword = (String) request.getAttribute("CURRENT_KEYWORD");
+                        currentKeyword = (currentKeyword != null) ? currentKeyword : "";
+                    %>
                     <!-- SEARCH -->
                     <div class="col-md-6">
                         <div class="d-flex mb-3 mb-md-0">
@@ -76,37 +72,47 @@
                                 type="search"
                                 name="keyword"
                                 placeholder="Search for users..."
-                                >
+                                value="<%=currentKeyword%>">
                             <button class="btn btn-dark" type="submit">Search</button>
                         </div>
                     </div>
 
-                    <!-- ADD USER -->
+<!--                     ADD USER 
                     <div class="col-md-6 d-flex justify-content-end align-items-start">
                         <a href="MainController?action=add-user-form" class="btn btn-dark">
                             Add New User
                         </a>
-                    </div>
+                    </div>-->
 
                     <!-- FILTER -->
                     <div class="col-12 mt-3">
                         <div class="d-flex gap-3">
-
+                            <%
+                                // Lấy role hiện tại đang được filter từ request
+                                String currentRole = request.getParameter("role");
+                                currentRole = (currentRole == null) ? "" : currentRole;
+                            %>
                             <div style="min-width: 150px;">
                                 <label class="form-label small fw-bold text-muted">Filter by Role</label>
                                 <select name="role" class="form-select form-select-sm shadow-sm" onchange="this.form.submit()">
-                                    <option value="">All Roles</option>
-                                    <option value="ADMIN">Admin</option>
-                                    <option value="USER">User</option>
+                                    <option value="" <%= currentRole.equals("") ? "selected" : ""%>>All Roles</option>
+                                    <option value="Admin" <%= currentRole.equals("Admin") ? "selected" : ""%>>Admin</option>
+                                    <option value="User" <%= currentRole.equals("User") ? "selected" : ""%>>User</option>
                                 </select>
                             </div>
 
+                                
+                                <%
+                                    // Lấy trạng thái đang được chọn từ request để giữ nguyên ô select
+                                    String currentStatus = request.getParameter("status");
+                                    currentStatus = (currentStatus == null) ? "" : currentStatus;
+                                %>
                             <div style="min-width: 150px;">
                                 <label class="form-label small fw-bold text-muted">Filter by Status</label>
-                                <select name="status" class="form-select form-select-sm shadow-sm">
-                                    <option value="">All Status</option>
-                                    <option value="ACTIVE">Active</option>
-                                    <option value="INACTIVE">Inactive</option>
+                                <select name="status" class="form-select form-select-sm shadow-sm" onchange="this.form.submit()">
+                                    <option value="" <%=currentStatus.equals("") ? "selected" : "" %>>All Status</option>
+                                    <option value="Active" <%=currentStatus.equals("Active") ? "selected" : "" %>>Active</option>
+                                    <option value="Inactive" <%=currentStatus.equals("Inactive") ? "selected" : "" %>>Inactive</option>
                                 </select>
                             </div>
 
@@ -132,19 +138,19 @@
                                     <th>Username</th>
                                     <th>Role</th>
                                     <th>Status</th>
-                                    <th>Last login</th>
+                                    <th>Created_at</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            <%
-                                List<User> listUser = (List<User>) request.getAttribute("LIST_USER");
+                                <%
+                                    List<User> listUser = (List<User>) request.getAttribute("LIST_USER");
 
-                                if(listUser != null){
-                                    for (User user : listUser) {
-                            %>
-                            
-                                
+                                    if (listUser != null) {
+                                        for (User user : listUser) {
+                                %>
+
+
                                 <tr>
                                     <td class="ps-3"><%=user.getUserId()%></td>
                                     <td><%=user.getUsername()%></td>
@@ -152,15 +158,16 @@
                                     <td><span class="badge bg-success"><%=user.getStatus()%></span></td>
                                     <td><span class="badge bg-primary"><%=user.getLastLogin()%></span></td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        <a href="MainController?action=edit-user&userId=<%=user.getUserId()%>" 
+                                           class="btn btn-sm btn-outline-secondary">Edit</a>
                                     </td>
                                 </tr>
-                            
-                            <%
+
+                                <%
+                                        }
                                     }
-                                }
-                                
-                            %>
+
+                                %>
                             </tbody>
 
                         </table>
