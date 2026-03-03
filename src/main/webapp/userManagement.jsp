@@ -59,8 +59,7 @@
 
         <!-- CONTENT -->
         <div class="container mt-4">
-
-            <!-- SEARCH + FILTER FORM -->
+            <!-- SEARCH + FILTER FORM-->
             <form action="MainController" method="get">
 
                 <!-- action cho controller -->

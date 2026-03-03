@@ -13,7 +13,11 @@ import java.sql.Timestamp;
 public class Asset {
 
     private int assetId;
-    private String type, symbol, exchange, name, status;
+    private String type;
+    private String symbol;
+    private String exchange;
+    private String name;
+    private String status;
     private boolean visible;
     private Timestamp createdAt;
     private Timestamp updatedAt;

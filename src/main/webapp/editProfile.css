@@ -1,0 +1,497 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0a0e27;
+    min-height: 100vh;
+    margin: 0;
+}
+/* ===== NAVBAR ===== */
+.navbar {
+    background: #fff;
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-brand {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.navbar-greeting {
+    font-size: 14px;
+    color: #555;
+}
+
+.navbar-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #222;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+/* ===== LOGOUT BUTTON ===== */
+.navbar-logout {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 14px;
+
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.08);
+
+    border: 1px solid rgba(255, 107, 107, 0.35);
+    border-radius: 6px;
+
+    transition: all 0.25s ease;
+}
+
+/* Hover */
+.navbar-logout:hover {
+    background: #ff6b6b;
+    color: white;
+    box-shadow: 0 3px 10px rgba(255, 107, 107, 0.35);
+}
+
+/* Click */
+.navbar-logout:active {
+    transform: scale(0.96);
+}
+
+/* ===== CONTAINER ===== */
+.page-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+.edit-container {
+    width: 100%;
+    max-width: 900px;
+    background: #1a1d2e;
+    border-radius: 4px;
+    border: 1px solid #2d3348;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== HEADER ===== */
+.edit-header {
+    background: #16213e;
+    padding: 32px 40px;
+    border-bottom: 1px solid #2d3348;
+}
+
+.edit-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+}
+
+.edit-header p {
+    font-size: 14px;
+    color: #8b92a7;
+    font-weight: 400;
+}
+
+/* ===== FORM CONTENT ===== */
+form {
+    padding: 40px;
+}
+
+/* ===== SECTION ===== */
+.edit-section {
+    margin-bottom: 36px;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #2d3348;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ===== FORM GROUP ===== */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #c5cad4;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #2d3348;
+    border-radius: 2px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: #0f1419;
+    color: #ffffff;
+    font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    background: #161b22;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+.form-group input::placeholder {
+    color: #535b6c;
+}
+
+/* ===== HELPER TEXT ===== */
+.helper-text {
+    font-size: 12px;
+    color: #6e7681;
+    margin-top: 6px;
+    font-family: 'SF Mono', monospace;
+}
+
+/* ===== ERROR MESSAGE ===== */
+.error-message {
+    background: rgba(220, 38, 38, 0.1);
+    border-left: 3px solid #dc2626;
+    color: #fca5a5;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-family: 'SF Mono', monospace;
+}
+
+.error-message::before {
+    content: "!";
+    background: #dc2626;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* ===== SUCCESS MESSAGE ===== */
+.success-message {
+    background: rgba(34, 197, 94, 0.1);
+    border-left: 3px solid #22c55e;
+    color: #86efac;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-family: 'SF Mono', monospace;
+}
+
+.success-message::before {
+    content: "✓";
+    background: #22c55e;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+    height: 1px;
+    background: #2d3348;
+    margin: 36px 0;
+}
+
+/* ===== BUTTONS ===== */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid #2d3348;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 2px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.btn-primary {
+    background: #4a90e2;
+    color: white;
+    border: 1px solid #4a90e2;
+}
+
+.btn-primary:hover {
+    background: #357abd;
+    border-color: #357abd;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+}
+
+.btn-primary:active {
+    background: #2e6ba8;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #8b92a7;
+    border: 1px solid #2d3348;
+}
+
+.btn-secondary:hover {
+    background: #1a1d2e;
+    border-color: #3d4562;
+    color: #c5cad4;
+}
+
+/* ===== INPUT STATES ===== */
+.form-group input:disabled {
+    background: #0a0e1a;
+    cursor: not-allowed;
+    color: #535b6c;
+    border-color: #1a1d2e;
+}
+
+.form-group input.error {
+    border-color: #dc2626;
+    background: rgba(220, 38, 38, 0.05);
+}
+
+.form-group input.success {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.05);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    body {
+        padding: 20px 10px;
+    }
+    
+    .edit-header {
+        padding: 24px 20px;
+    }
+    
+    .edit-header h2 {
+        font-size: 20px;
+    }
+    
+    form {
+        padding: 24px 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.edit-container {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ===== DATA TABLE STYLE (nếu cần) ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    color: #c5cad4;
+    font-family: 'SF Mono', monospace;
+}
+
+table th {
+    text-align: left;
+    padding: 12px;
+    background: #16213e;
+    border-bottom: 1px solid #2d3348;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: #8b92a7;
+}
+
+table td {
+    padding: 12px;
+    border-bottom: 1px solid #2d3348;
+}
+
+/* ===== FOCUS INDICATORS ===== */
+*:focus-visible {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+/* ===== SELECTION ===== */
+::selection {
+    background: rgba(74, 144, 226, 0.3);
+    color: white;
+}
+
+/* ===== SCROLLBAR (Dark) ===== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0a0e27;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2d3348;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3d4562;
+}
+
+/* ===== CHANGE EMAIL BUTTON ===== */
+.change-btn {
+    margin-top: 10px;
+    padding: 8px 16px;
+
+    background: transparent;
+    color: #4a90e2;
+
+    border: 1px solid #4a90e2;
+    border-radius: 2px;
+
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Hover */
+.change-btn:hover {
+    background: #4a90e2;
+    color: white;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.35);
+}
+
+/* Click */
+.change-btn:active {
+    transform: scale(0.97);
+}
+
+/* Focus accessibility */
+.change-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+}
+.email-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.email-row input {
+    flex: 1;
+}
+.email-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.email-row input {
+    flex: 1;
+}
+
+.change-btn {
+    height: 42px;
+    white-space: nowrap;
+}
+input[readonly] {
+    opacity: 0.75;
+    cursor: not-allowed;
+}

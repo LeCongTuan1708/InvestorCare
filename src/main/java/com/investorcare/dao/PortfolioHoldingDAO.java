@@ -1,0 +1,100 @@
+package com.investorcare.dao;
+
+import com.investorcare.model.PortfolioHolding;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PortfolioHoldingDAO {
+
+    public boolean addAsset(int portfolioId, int assetId, double qty, double avgCost)
+            throws Exception {
+        String sql
+                = "IF NOT EXISTS ( "
+                + "    SELECT 1 FROM PORTFOLIO_HOLDING "
+                + "    WHERE PORTFOLIO_ID=? AND ASSET_ID=? "
+                + ") "
+                + "INSERT INTO PORTFOLIO_HOLDING (PORTFOLIO_ID, ASSET_ID, QTY, AVG_COST) "
+                + "VALUES (?, ?, ?, ?) "
+                + "ELSE "
+                + "UPDATE PORTFOLIO_HOLDING "
+                + "SET QTY = QTY + ?, "
+                + "    AVG_COST = ((AVG_COST * QTY) + (? * ?)) / (QTY + ?) "
+                + "WHERE PORTFOLIO_ID=? AND ASSET_ID=?";
+
+        Connection con = JDBCUtils.getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        // IF NOT EXISTS check
+        ps.setInt(1, portfolioId);
+        ps.setInt(2, assetId);
+        // INSERT values
+        ps.setInt(3, portfolioId);
+        ps.setInt(4, assetId);
+        ps.setDouble(5, qty);
+        ps.setDouble(6, avgCost);
+        // UPDATE values: QTY + qty, tính avg mới
+        ps.setDouble(7, qty);       // QTY + ?
+        ps.setDouble(8, avgCost);   // avgCost * qty
+        ps.setDouble(9, qty);       // avgCost * qty
+        ps.setDouble(10, qty);      // QTY + qty
+        // WHERE
+        ps.setInt(11, portfolioId);
+        ps.setInt(12, assetId);
+        return ps.executeUpdate() > 0;
+    }
+    // thêm method vào class PortfolioHoldingDAO
+
+    public List<PortfolioHolding> getHoldingsByPortfolio(int portfolioId)
+            throws Exception {
+
+        String sql
+                = "SELECT ph.PORTFOLIO_ID, ph.ASSET_ID, "
+                + "       ph.QTY, ph.AVG_COST, "
+                + "       a.SYMBOL, a.NAME, a.EXCHANGE, "
+                + "       ISNULL(pb.[CLOSE], 0) AS CURRENT_PRICE "
+                + "FROM PORTFOLIO_HOLDING ph "
+                + "JOIN ASSET a ON a.ASSET_ID = ph.ASSET_ID "
+                + "LEFT JOIN PRICE_BAR pb ON pb.ASSET_ID = ph.ASSET_ID "
+                + "    AND pb.TS = ( "
+                + "        SELECT MAX(TS) FROM PRICE_BAR "
+                + "        WHERE ASSET_ID = ph.ASSET_ID "
+                + "    ) "
+                + "WHERE ph.PORTFOLIO_ID = ? "
+                + "ORDER BY a.SYMBOL ASC";
+
+        List<PortfolioHolding> list = new ArrayList<>();
+        Connection con = JDBCUtils.getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, portfolioId);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            list.add(new PortfolioHolding(
+                    rs.getInt("PORTFOLIO_ID"),
+                    rs.getInt("ASSET_ID"),
+                    rs.getDouble("QTY"),
+                    rs.getDouble("AVG_COST"),
+                    rs.getString("SYMBOL"),
+                    rs.getString("NAME"),
+                    rs.getString("EXCHANGE"),
+                    rs.getDouble("CURRENT_PRICE")
+            ));
+        }
+        return list;
+    }
+
+// thêm method xoá holding
+    public boolean removeAsset(int portfolioId, int assetId)
+            throws Exception {
+        String sql
+                = "DELETE FROM PORTFOLIO_HOLDING "
+                + "WHERE PORTFOLIO_ID=? AND ASSET_ID=?";
+        Connection con = JDBCUtils.getConnection();
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, portfolioId);
+        ps.setInt(2, assetId);
+        return ps.executeUpdate() > 0;
+    }
+}

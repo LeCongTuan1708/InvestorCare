@@ -394,5 +394,103 @@ public class AssetDAO implements DAOInterface<Asset> {
         }
         return false;
     }
+    
+    public void savePriceToHistory(int assetId, double price) {
+    String sql = 
+        "IF NOT EXISTS ( "
+      + "    SELECT 1 FROM PRICE_BAR "
+      + "    WHERE ASSET_ID = ? "
+      + "    AND TS >= DATEADD(MINUTE, -1, SYSDATETIME()) "
+      + ") "
+      + "INSERT INTO PRICE_BAR (ASSET_ID, TS, [OPEN], HIGH, LOW, [CLOSE], VOLUME, SOURCE) "
+      + "VALUES (?, SYSDATETIME(), ?, ?, ?, ?, 0, 'YahooFinance')";
 
+    Connection conn = null;
+    PreparedStatement pst = null;
+    try {
+        conn = JDBCUtils.getConnection();
+        pst = conn.prepareStatement(sql);
+        pst.setInt(1, assetId);   // cho IF NOT EXISTS
+        pst.setInt(2, assetId);   // cho INSERT
+        pst.setDouble(3, price);  // OPEN
+        pst.setDouble(4, price);  // HIGH
+        pst.setDouble(5, price);  // LOW
+        pst.setDouble(6, price);  // CLOSE
+        pst.executeUpdate();
+    } catch (Exception e) {
+        System.out.println("Lỗi khi lưu lịch sử giá: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        try {
+            if (pst != null) pst.close();
+            if (conn != null) conn.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+}
+
+    public double getLatestPrice(int assetId) {
+    double price = 0;
+
+    try {
+        Connection conn = JDBCUtils.getConnection();
+
+        String sql = "SELECT TOP 1 [CLOSE] FROM PRICE_BAR "
+                   + "WHERE ASSET_ID = ? ORDER BY TS DESC";
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, assetId);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            price = rs.getDouble("CLOSE");
+        }
+
+        conn.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return price;
+}
+    //GET ASSET LIST IN THE DATABASE
+    public List<Asset> getAllAssets() {
+
+    List<Asset> list = new ArrayList<>();
+
+    try {
+        Connection conn = JDBCUtils.getConnection();
+
+        String sql = "SELECT * FROM ASSET WHERE STATUS = 'Active' AND VISIBLE = 1";
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+
+            Asset a = new Asset();
+
+            a.setAssetId(rs.getInt("ASSET_ID"));
+            a.setType(rs.getString("TYPE"));
+            a.setSymbol(rs.getString("SYMBOL"));
+            a.setExchange(rs.getString("EXCHANGE"));
+            a.setName(rs.getString("NAME"));
+            a.setStatus(rs.getString("STATUS"));
+            a.setVisible(rs.getBoolean("VISIBLE"));
+            a.setCreatedAt(rs.getTimestamp("CREATED_AT"));
+            a.setUpdatedAt(rs.getTimestamp("UPDATED_AT"));
+
+            list.add(a);
+        }
+
+        conn.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return list;
+}
 }

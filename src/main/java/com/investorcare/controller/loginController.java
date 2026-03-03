@@ -4,9 +4,14 @@
  */
 package com.investorcare.controller;
 
+import com.investorcare.dao.AssetDAO;
 import com.investorcare.dao.UserDAO;
+import com.investorcare.model.Asset;
 import com.investorcare.model.User;
-import java.io.IOException;;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +46,7 @@ public class loginController extends HttpServlet {
                 if("Admin".equalsIgnoreCase(loginUser.getRole())){
                     url = USER_MANAGEMENT;
                 }else{
-                    url = TICKER_MANAGEMENT;
+                    url ="DashBoardController";
                 }
             }else{
                 request.setAttribute("ERROR", "Incorrect Username or Password!");

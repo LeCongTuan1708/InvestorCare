@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "MainController", urlPatterns = {"/MainController"})
 public class MainController extends HttpServlet {
 
-  
     private static final String ERROR = "error.jsp";
     private static final String LOGIN = "login";
     private static final String LOGIN_CONTROLLER = "loginController";
@@ -27,17 +26,21 @@ public class MainController extends HttpServlet {
     private static final String SIGNUP_CONTROLLER = "SignupController";
     private static final String USER_LIST = "user-list";
     private static final String USER_MANAGEMENT = "UserManagementController";
-    
-
+    private static final String LOGOUT = "logout";
     private static final String SEARCH_ASSET = "asset-search";
     private static final String SEARCH_ASSET_Controller = "AssetListController";
-
     private static final String ADD_ASSET = "add-asset";
     private static final String ADD_ASSET_Controller = "addAssetController";
-    
     private static final String EDIT_ASSET = "edit-asset";
     private static final String EDIT_ASSET_Controller = "editAssetController";
-
+    private static final String EDIT_PROFILE = "editProfile";
+    private static final String EDIT_PROFILE_CONTROLLER = "EditProfileController";
+    private static final String UPDATE_PROFILE = "UpdateProfile";
+    private static final String UPDATE_PROFILE_CONTROLLER = "UpdateProfileController";
+    private static final String PORTFOLIO = "portfolio";
+    private static final String PORTFOLIO_CONTROLLER = "PortfolioController";
+    private static final String USER_DASHBOARD="dashboard";
+    private static final String USER_DASHBOARD_CONTROLLER="DashBoardController";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -51,17 +54,23 @@ public class MainController extends HttpServlet {
                 url = SEARCH_ASSET_Controller;
             } else if (ADD_ASSET.equals(action)) {
                 url = ADD_ASSET_Controller;
-            
+
             } else if (EDIT_ASSET.equals(action)) {
                 url = EDIT_ASSET_Controller;
-            }
-            else if(SIGNUP.equals(action)){
+            } else if (SIGNUP.equals(action)) {
                 url = SIGNUP_CONTROLLER;
-            }
-            else if(USER_LIST.equals(action)){
+            } else if (USER_LIST.equals(action)) {
                 url = USER_MANAGEMENT;
-            }
-            else{
+            } else if (EDIT_PROFILE.equals(action)) {
+                url = EDIT_PROFILE_CONTROLLER;
+            } else if (UPDATE_PROFILE.equals(action)) {
+                url = UPDATE_PROFILE_CONTROLLER;
+            } else if (PORTFOLIO.equals(action)) {
+                url = PORTFOLIO_CONTROLLER;
+            }else if(USER_DASHBOARD.equals(action)){
+                url =USER_DASHBOARD_CONTROLLER;
+            
+            }else {
                 request.setAttribute("ERROR", "Your action not support");
             }
         } catch (Exception e) {
@@ -70,19 +79,17 @@ public class MainController extends HttpServlet {
             request.getRequestDispatcher(url).forward(request, response);
         }
     }
-   
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-   
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-  
 }

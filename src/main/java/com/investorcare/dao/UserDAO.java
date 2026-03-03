@@ -19,7 +19,13 @@ public class UserDAO {
     private final static String CHECK_lOGIN = "SELECT * FROM [USER] WHERE USERNAME = ? AND PASSWORD = ?";
     private final static String SIGN_UP = "INSERT INTO [USER] (USERNAME, EMAIL, PASSWORD, ROLE, STATUS) VALUES (?, ?, ?, 'User', 'Active')";
     private final static String SELECT_ALL = "SELECT * FROM [USER]";
-
+    
+    
+    // ===== THÊM CÁC CONSTANT SAU =====
+    private final static String CHECK_USERNAME_EXISTS = "SELECT USER_ID FROM [USER] WHERE USERNAME = ? AND USER_ID <> ?";
+    private final static String CHECK_EMAIL_EXISTS = "SELECT USER_ID FROM [USER] WHERE EMAIL = ? AND USER_ID <> ?";
+    private final static String UPDATE_BASIC_INFO = "UPDATE [USER] SET USERNAME = ?, EMAIL = ? WHERE USER_ID = ?";
+    private final static String UPDATE_PASSWORD = "UPDATE [USER] SET PASSWORD = ? WHERE USER_ID = ?";
     public User checkLogin(String username, String password) throws Exception {
         Connection conn = null;
         PreparedStatement pst = null;
@@ -35,6 +41,7 @@ public class UserDAO {
                 User user = new User();
                 user.setUsername(rs.getString("USERNAME"));
                 user.setPassword(rs.getString("PASSWORD"));
+                user.setEmail(rs.getString("EMAIL"));
                 user.setRole(rs.getString("ROLE"));
                 user.setUserId(rs.getInt("USER_ID"));
                 return user;
@@ -118,5 +125,85 @@ public class UserDAO {
             e.printStackTrace();
         }
         return list;
+    }
+    // ===== THÊM CÁC METHOD MỚI =====
+
+    /**
+     * Check if username already exists (excluding current user)
+     */
+    public boolean checkUsernameExists(String username, int userId) throws Exception {
+        Connection conn = null;
+        PreparedStatement pst = null;
+
+        try {
+            conn = JDBCUtils.getConnection();
+            pst = conn.prepareStatement(CHECK_USERNAME_EXISTS);
+            pst.setString(1, username);
+            pst.setInt(2, userId);
+            ResultSet rs = pst.executeQuery();
+            return rs.next();
+        } finally {
+            if (pst != null) pst.close();
+            if (conn != null) conn.close();
+        }
+    }
+
+    /**
+     * Check if email already exists (excluding current user)
+     */
+    public boolean checkEmailExists(String email, int userId) throws Exception {
+        Connection conn = null;
+        PreparedStatement pst = null;
+
+        try {
+            conn = JDBCUtils.getConnection();
+            pst = conn.prepareStatement(CHECK_EMAIL_EXISTS);
+            pst.setString(1, email);
+            pst.setInt(2, userId);
+            ResultSet rs = pst.executeQuery();
+            return rs.next();
+        } finally {
+            if (pst != null) pst.close();
+            if (conn != null) conn.close();
+        }
+    }
+
+    /**
+     * Update username and email
+     */
+    public void updateBasicInfo(int userId, String username, String email) throws Exception {
+        Connection conn = null;
+        PreparedStatement pst = null;
+
+        try {
+            conn = JDBCUtils.getConnection();
+            pst = conn.prepareStatement(UPDATE_BASIC_INFO);
+            pst.setString(1, username);
+            pst.setString(2, email);
+            pst.setInt(3, userId);
+            pst.executeUpdate();
+        } finally {
+            if (pst != null) pst.close();
+            if (conn != null) conn.close();
+        }
+    }
+
+    /**
+     * Update password
+     */
+    public void updatePassword(int userId, String password) throws Exception {
+        Connection conn = null;
+        PreparedStatement pst = null;
+
+        try {
+            conn = JDBCUtils.getConnection();
+            pst = conn.prepareStatement(UPDATE_PASSWORD);
+            pst.setString(1, password);
+            pst.setInt(2, userId);
+            pst.executeUpdate();
+        } finally {
+            if (pst != null) pst.close();
+            if (conn != null) conn.close();
+        }
     }
 }
