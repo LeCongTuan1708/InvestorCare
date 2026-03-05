@@ -18,14 +18,13 @@ public class MainController extends HttpServlet {
     private static final String SIGNUP_CONTROLLER = "SignupController";
     private static final String USER_LIST = "user-list";
     private static final String USER_MANAGEMENT = "UserManagementController";
-
+    private static final String LOGOUT = "logout";
     // Gộp khai báo biến của m và nhánh main
     private static final String WATCH_LIST = "watch-list";
     private static final String WATCH_LIST_CONTROLLER = "WatchListController";
     private static final String EDIT_USER = "edit-user";
     private static final String UPDATE_USER = "update-user";
     private static final String EDIT_USER_CONTROLLER = "EditUserController";
-
     private static final String SEARCH_ASSET = "asset-search";
     private static final String SEARCH_ASSET_Controller = "AssetListController";
     private static final String ADD_ASSET = "add-asset";
@@ -35,7 +34,15 @@ public class MainController extends HttpServlet {
     private static final String ADD_ASSET_BUTTON = "add-asset-button";
     private static final String ADD_ASSET_JSP = "insertAsset.jsp";
     private static final String EDIT_ASSET_Controller = "editAssetController";
-    private static final String LOGOUT = "logout";
+    private static final String EDIT_PROFILE = "editProfile";
+    private static final String EDIT_PROFILE_CONTROLLER = "EditProfileController";
+    private static final String UPDATE_PROFILE = "UpdateProfile";
+    private static final String UPDATE_PROFILE_CONTROLLER = "UpdateProfileController";
+    private static final String PORTFOLIO = "portfolio";
+    private static final String PORTFOLIO_CONTROLLER = "PortfolioController";
+    private static final String USER_DASHBOARD="dashboard";
+    private static final String USER_DASHBOARD_CONTROLLER="DashBoardController";
+
     private static final String LOGOUT_Controller = "logoutController";
 
     private static final String EDIT_WATCHLIST = "edit-watchlist";
@@ -45,8 +52,6 @@ public class MainController extends HttpServlet {
     private static final String SHOW_ADD_WATCHLIST = "show-add-watchlist";
     private static final String ADD_WATCHLIST_CONTROLLER = "AddWatchListController";
     private static final String ADD_WATCHLIST = "add-watchlist";
-
-    private final static String USER_DASHBOARD = "user-dash-board";
 
     private final static String WATCHLIST_ITEM = "watchlist-item";
     private static final String WATCHLIST_ITEM_CONTROLLER = "WatchListItemController";
@@ -93,13 +98,24 @@ public class MainController extends HttpServlet {
                 url = ADD_ASSET_JSP;
             } else if (ADD_ASSET.equals(action)) {
                 url = ADD_ASSET_Controller;
+
             } else if (EDIT_ASSET.equals(action)) {
                 url = EDIT_ASSET_Controller;
             } else if (SIGNUP.equals(action)) {
                 url = SIGNUP_CONTROLLER;
             } else if (USER_LIST.equals(action)) {
                 url = USER_MANAGEMENT;
-            } else if (WATCH_LIST.equals(action)) {
+
+            } else if (EDIT_PROFILE.equals(action)) {
+                url = EDIT_PROFILE_CONTROLLER;
+            } else if (UPDATE_PROFILE.equals(action)) {
+                url = UPDATE_PROFILE_CONTROLLER;
+            } else if (PORTFOLIO.equals(action)) {
+                url = PORTFOLIO_CONTROLLER;
+            }else if(USER_DASHBOARD.equals(action)){
+                url =USER_DASHBOARD_CONTROLLER;
+            
+            }else if (WATCH_LIST.equals(action)) {
                 url = WATCH_LIST_CONTROLLER;
             } else if (EDIT_WATCHLIST.equals(action)) {
                 url = EDIT_WATCHLIST_CONTROLLER;
@@ -158,4 +174,5 @@ public class MainController extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
+
 }

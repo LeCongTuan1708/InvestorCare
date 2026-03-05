@@ -46,6 +46,12 @@
                     </div>
                 </nav>
 
+<<<<<<< HEAD
+        <!-- CONTENT -->
+        <div class="container mt-4">
+            <!-- SEARCH + FILTER FORM-->
+            <form action="MainController" method="get">
+=======
                 <main class="px-md-4 py-4" style="margin-left: 280px; width: calc(100% - 280px);">
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom border-secondary">
                         <h1 class="h2 text-info fw-bold">User Management</h1>
@@ -69,6 +75,7 @@
                                         <button class="btn btn-info text-dark fw-bold" type="submit">SEARCH</button>
                                     </div>
                                 </div>
+>>>>>>> main
 
                                 <div class="col-md-3">
                                     <%

@@ -40,7 +40,7 @@
                         <input type="password" name="password" value="<%=request.getParameter("password")!= null ? request.getParameter("password") : ""%>"
                                class=" form-control p-2" placeholder="Enter password...">
                         
-                        <button class="btn btn-dark mt-3" type="submit" name="action" value="login">Sign in
+                        <button class="btn btn-dark mt-3" type="submit"  value="login">Sign in
                         </button>
                         <p class="text-center pt-3 m-0 text-black">Chưa có tài khoản?  <a href="signup.jsp" style=" color: black">Đăng ký</a></p>
                     </form>
