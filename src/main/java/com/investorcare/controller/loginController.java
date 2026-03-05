@@ -35,6 +35,25 @@ public class loginController extends HttpServlet {
             User loginUser = userDao.checkLogin(username, password);
 
             if (loginUser != null) {
+                java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                String currentTime = dtf.format(java.time.LocalDateTime.now());
+                String lastLoginTime = "First time login";
+                
+                javax.servlet.http.Cookie[] cookies = request.getCookies();
+                if (cookies != null) {
+                    for (javax.servlet.http.Cookie cookie : cookies) {
+                        if (cookie.getName().equals("lastLogin_" + loginUser.getUsername())) {
+                            lastLoginTime = java.net.URLDecoder.decode(cookie.getValue(), "UTF-8");
+                            break;
+                        }
+                    }
+                }
+                loginUser.setLastLogin(lastLoginTime);
+                
+                javax.servlet.http.Cookie loginCookie = new javax.servlet.http.Cookie("lastLogin_" + loginUser.getUsername(), java.net.URLEncoder.encode(currentTime, "UTF-8"));
+                loginCookie.setMaxAge(60 * 60 * 24 * 30); // Cookie sống trong 30 ngày
+                response.addCookie(loginCookie);
+                
                 HttpSession session = request.getSession();
                 session.setAttribute("LOGIN_USER", loginUser);
                 session.setAttribute("ROLE", loginUser.getRole());

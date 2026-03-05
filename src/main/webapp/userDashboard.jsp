@@ -38,7 +38,7 @@
     <div class="navbar-right">
         <span class="navbar-greeting">Welcome, <strong><%= acc.getUsername()%></strong></span>
         <div class="navbar-avatar"><%= acc.getUsername().substring(0,1).toUpperCase()%></div>
-        <a href="MainController?action=logout" class="navbar-logout">Logout</a>
+        <a href="MainController?action=logout" class="navbar-logout">Log out</a>
     </div>
 </nav>
 
@@ -75,7 +75,7 @@
         </div>
         <div class="account-stats">
             <div class="stat-box"><div class="stat-label">Member Since</div><div class="stat-value">01/01/2025</div></div>
-            <div class="stat-box"><div class="stat-label">Last Login</div><div class="stat-value">26/02/2026</div></div>
+            <div class="stat-box"><div class="stat-label">Last Login</div><div class="stat-value"><%= (acc.getLastLogin() != null) ? acc.getLastLogin() : "N/A" %></div></div>
         </div>
     </section>
 
