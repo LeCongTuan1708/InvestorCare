@@ -331,3 +331,81 @@ section[id], .holdings-panel {
   .watchlist-grid { grid-template-columns: 1fr; }
   .section-card { padding: 16px; }
 }
+
+/* ===== MARKET QUOTE EXTRAS ===== */
+.badge-up {
+  display: inline-block;
+  background: rgba(0,229,160,.12);
+  color: var(--accent);
+  border: 1px solid rgba(0,229,160,.25);
+  padding: 2px 8px; border-radius: 100px;
+  font-size: 11px; font-weight: 700;
+}
+.badge-down {
+  display: inline-block;
+  background: rgba(244,63,94,.12);
+  color: var(--red);
+  border: 1px solid rgba(244,63,94,.25);
+  padding: 2px 8px; border-radius: 100px;
+  font-size: 11px; font-weight: 700;
+}
+.mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+}
+
+/* ===== MARKET TABLE FIX ===== */
+
+/* Bảng market scroll ngang thay vì wrap */
+#market .table-wrap {
+  overflow-x: auto;
+}
+#market .data-table {
+  min-width: 1100px;
+}
+
+/* Cột Actions gọn lại — không wrap */
+#market .td-actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  min-width: 200px;
+}
+#market .td-actions form {
+  display: grid;
+  grid-template-columns: 1fr 60px 80px auto;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+/* Select portfolio gọn */
+#market .td-actions select.input-dark {
+  font-size: 11px;
+  padding: 5px 8px;
+  min-width: 0;
+}
+
+/* Qty & Avg Cost nhỏ lại */
+#market .td-actions .input-dark.sm {
+  width: 60px;
+  font-size: 11px;
+}
+
+/* Badge change % dạng pill nhỏ */
+.badge-up, .badge-down {
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+/* Các cột số không wrap */
+#market .data-table td {
+  white-space: nowrap;
+}
+
+/* Cột Name được phép wrap nhưng giới hạn width */
+#market .data-table td:nth-child(2) {
+  max-width: 140px;
+  white-space: normal;
+  word-break: break-word;
+}
