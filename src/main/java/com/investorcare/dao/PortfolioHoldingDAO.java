@@ -106,4 +106,28 @@ public class PortfolioHoldingDAO {
             return ps.executeUpdate() > 0;
         }
     }
+    
+    public boolean userHasAsset(int userId, int assetId) throws Exception {
+
+    String sql =
+        "SELECT COUNT(*) " +
+        "FROM PORTFOLIO_HOLDING ph " +
+        "JOIN PORTFOLIO p ON ph.PORTFOLIO_ID = p.PORTFOLIO_ID " +
+        "WHERE p.USER_ID = ? AND ph.ASSET_ID = ?";
+
+    try (Connection con = JDBCUtils.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setInt(1, userId);
+        ps.setInt(2, assetId);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+    }
+
+    return false;
+}
 }

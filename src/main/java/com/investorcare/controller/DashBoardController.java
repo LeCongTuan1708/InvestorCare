@@ -4,13 +4,17 @@
  */
 package com.investorcare.controller;
 
+import com.investorcare.dao.AlertDAO;
 import com.investorcare.dao.AssetDAO;
 import com.investorcare.dao.PortfolioDAO;
 import com.investorcare.dao.PortfolioHoldingDAO;
+import com.investorcare.dao.PriceBarDAO;
 import com.investorcare.model.Asset;
 import com.investorcare.model.Portfolio;
 import com.investorcare.model.PortfolioHolding;
+import com.investorcare.model.PriceBar;
 import com.investorcare.model.User;
+import com.investorcare.service.SignalEngine;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -80,18 +84,32 @@ public class DashBoardController extends HttpServlet {
         Map<String, Double> apiPrices = new HashMap<>();
         try {
             apiPrices = StockAPIService.getBatchPrices(symbols);
+            System.out.println(">>> API RESULT SIZE: " + apiPrices.size());
+            System.out.println(">>> API MAP: " + apiPrices);
         } catch (Exception e) {
             System.out.println(">>> API lỗi: " + e.getMessage());
         }
 
 // 4. Map price + lưu DB
         Map<Integer, Double> priceMapForJSP = new HashMap<>();
+        PriceBarDAO pbDao = new PriceBarDAO();
         for (Asset a : list) {
             Double price = apiPrices.getOrDefault(a.getSymbol(), 0.0);
             priceMapForJSP.put(a.getAssetId(), price);
+
             if (price > 0) {
                 try {
-                    dao.savePriceToHistory(a.getAssetId(), price);
+
+                    
+                    PriceBar latest = pbDao.getLatest(a.getAssetId());
+
+                    if (latest == null || latest.getClose() != price) {
+                        dao.savePriceToHistory(a.getAssetId(), price);
+
+                        SignalEngine engine = new SignalEngine();
+                        engine.checkVolatility(a.getAssetId(), user.getUserId());
+                    }
+
                 } catch (Exception e) {
                     System.out.println(">>> Lỗi lưu price: " + e.getMessage());
                 }
@@ -117,6 +135,19 @@ public class DashBoardController extends HttpServlet {
                 System.out.println(">>> ERROR loading holdings: " + e.getMessage()); // DEBUG
                 e.printStackTrace();
             }
+        }
+
+        AlertDAO alertDAO = new AlertDAO();
+
+        try {
+            request.setAttribute("alerts",
+                    alertDAO.getAlertsByUser(user.getUserId()));
+
+            request.setAttribute("unreadCount",
+                    alertDAO.countUnread(user.getUserId()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         request.getRequestDispatcher("userDashboard.jsp").forward(request, response);
