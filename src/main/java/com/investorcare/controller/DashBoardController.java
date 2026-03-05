@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package com.investorcare.controller;
 
 import com.investorcare.dao.AlertDAO;
@@ -10,13 +6,13 @@ import com.investorcare.dao.PortfolioDAO;
 import com.investorcare.dao.PortfolioHoldingDAO;
 import com.investorcare.dao.PriceBarDAO;
 import com.investorcare.model.Asset;
+import com.investorcare.model.AssetQuote;
 import com.investorcare.model.Portfolio;
 import com.investorcare.model.PortfolioHolding;
 import com.investorcare.model.PriceBar;
 import com.investorcare.model.User;
 import com.investorcare.service.SignalEngine;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,34 +25,27 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import service.StockAPIService;
 
-/**
- *
- * @author khait
- */
 @WebServlet(name = "DashBoardController", urlPatterns = {"/DashBoardController"})
 public class DashBoardController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
 
+        HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("LOGIN_USER") == null) {
             response.sendRedirect("login.jsp");
             return;
         }
-        //LOAD PORTFOLIO LIST
-        User user = (User) session.getAttribute("LOGIN_USER");
-        PortfolioDAO portfolioDAO = new PortfolioDAO();
 
+        User user = (User) session.getAttribute("LOGIN_USER");
+
+        if (!"User".equalsIgnoreCase(user.getRole())) {
+            response.sendRedirect("accessDenied.jsp");
+            return;
+        }
+
+        // ── 1. Load portfolios ──
+        PortfolioDAO portfolioDAO = new PortfolioDAO();
         List<Portfolio> portfolios = null;
 
         try {
@@ -65,81 +54,89 @@ public class DashBoardController extends HttpServlet {
             e.printStackTrace();
         }
 
-        if (!"User".equalsIgnoreCase(user.getRole())) {
-            response.sendRedirect("accessDenied.jsp");
-            return;
-        }
-        //LOAD ASSETS LIST 
-        // 1. Lấy danh sách tài sản từ DB
-        AssetDAO dao = new AssetDAO();
-        List<Asset> list = dao.getAllAssets();
+        // ── 2. Load assets ──
+        AssetDAO assetDAO = new AssetDAO();
+        List<Asset> assets = assetDAO.getAllAssets();
 
-        // 2. Gom tất cả Symbol vào một danh sách
+        // ── 3. Gom symbols ──
         List<String> symbols = new ArrayList<>();
-        for (Asset a : list) {
+        for (Asset a : assets) {
             symbols.add(a.getSymbol());
         }
 
-        // 3. Gọi Finnhub API
-        Map<String, Double> apiPrices = new HashMap<>();
+        // ── 4. Gọi API → Map<symbol, AssetQuote> ──
+        Map<String, AssetQuote> apiQuotes = new HashMap<>();
+
         try {
-            apiPrices = StockAPIService.getBatchPrices(symbols);
-            System.out.println(">>> API RESULT SIZE: " + apiPrices.size());
-            System.out.println(">>> API MAP: " + apiPrices);
+            apiQuotes = StockAPIService.getBatchQuotes(symbols);
         } catch (Exception e) {
-            System.out.println(">>> API lỗi: " + e.getMessage());
+            System.out.println(">>> API error: " + e.getMessage());
         }
 
-// 4. Map price + lưu DB
-        Map<Integer, Double> priceMapForJSP = new HashMap<>();
-        PriceBarDAO pbDao = new PriceBarDAO();
-        for (Asset a : list) {
-            Double price = apiPrices.getOrDefault(a.getSymbol(), 0.0);
-            priceMapForJSP.put(a.getAssetId(), price);
+        // ── 5. Build Map<assetId, AssetQuote> cho JSP + lưu price history ──
+        Map<Integer, AssetQuote> quoteMap = new HashMap<>();
 
-            if (price > 0) {
+        PriceBarDAO priceBarDAO = new PriceBarDAO();
+        SignalEngine engine = new SignalEngine();
+
+        for (Asset a : assets) {
+
+            AssetQuote q = apiQuotes.getOrDefault(a.getSymbol(), new AssetQuote());
+            quoteMap.put(a.getAssetId(), q);
+
+            if (q.getCurrentPrice() > 0) {
+
                 try {
 
-                    
-                    PriceBar latest = pbDao.getLatest(a.getAssetId());
+                    PriceBar latest = priceBarDAO.getLatest(a.getAssetId());
 
-                    if (latest == null || latest.getClose() != price) {
-                        dao.savePriceToHistory(a.getAssetId(), price);
+                    if (latest == null || latest.getClose() != q.getCurrentPrice()) {
 
-                        SignalEngine engine = new SignalEngine();
+                        assetDAO.savePriceToHistory(a.getAssetId(), q.getCurrentPrice());
+
+                        // Trigger Signal + Alert system
                         engine.checkVolatility(a.getAssetId(), user.getUserId());
+
                     }
 
                 } catch (Exception e) {
-                    System.out.println(">>> Lỗi lưu price: " + e.getMessage());
+                    System.out.println(">>> Save price error: " + e.getMessage());
                 }
+
             }
         }
 
-        request.setAttribute("assets", list);
-        request.setAttribute("prices", priceMapForJSP);
+        request.setAttribute("assets", assets);
+        request.setAttribute("quotes", quoteMap);
         request.setAttribute("portfolios", portfolios);
 
-// THÊM: load holdings nếu user bấm mở portfolio
+        // ── 6. Load holdings nếu user mở portfolio ──
         String openParam = request.getParameter("openPortfolioId");
-        System.out.println(">>> openPortfolioId param = " + openParam); // DEBUG
+
         if (openParam != null) {
+
             try {
+
                 int openPortfolioId = Integer.parseInt(openParam);
+
                 PortfolioHoldingDAO holdingDAO = new PortfolioHoldingDAO();
-                List<PortfolioHolding> holdings = holdingDAO.getHoldingsByPortfolio(openPortfolioId);
-                System.out.println(">>> holdings size = " + holdings.size()); // DEBUG
+                List<PortfolioHolding> holdings
+                        = holdingDAO.getHoldingsByPortfolio(openPortfolioId);
+
                 request.setAttribute("holdings", holdings);
                 request.setAttribute("openPortfolioId", openPortfolioId);
+
             } catch (Exception e) {
-                System.out.println(">>> ERROR loading holdings: " + e.getMessage()); // DEBUG
                 e.printStackTrace();
             }
+
         }
 
+        // ── 7. Load Alerts ──
         AlertDAO alertDAO = new AlertDAO();
 
         try {
+
             request.setAttribute("alerts",
                     alertDAO.getAlertsByUser(user.getUserId()));
 
@@ -153,43 +150,15 @@ public class DashBoardController extends HttpServlet {
         request.getRequestDispatcher("userDashboard.jsp").forward(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processRequest(req, res);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processRequest(req, res);
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }
