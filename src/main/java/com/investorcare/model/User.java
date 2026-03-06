@@ -13,19 +13,20 @@ import java.sql.Date;
 public class User {
     private int userId;
     private String username, email, password, role, status;
+    private String created_at;
     private String lastLogin;
     
     public User() {
     }
 
-    public User(int userId, String username, String email, String password, String role, String status, String lastLogin) {
+    public User(int userId, String username, String email, String password, String role, String status, String created_at) {
         this.userId = userId;
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
         this.status = status;
-        this.lastLogin = lastLogin;
+        this.created_at = created_at;
     }
 
     public int getUserId() {
@@ -76,6 +77,14 @@ public class User {
         this.status = status;
     }
 
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
     public String getLastLogin() {
         return lastLogin;
     }
@@ -83,6 +92,9 @@ public class User {
     public void setLastLogin(String lastLogin) {
         this.lastLogin = lastLogin;
     }
+    
+    
+
     
     
 }

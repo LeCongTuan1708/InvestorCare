@@ -7,7 +7,7 @@
 <%@page import="java.util.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    User acc = (User) session.getAttribute("LOGIN_USER");
+User acc = (User) session.getAttribute("LOGIN_USER");
     if (acc == null) { response.sendRedirect("login.jsp"); return; }
 
     List<Portfolio>          portfolios     = (List<Portfolio>)          request.getAttribute("portfolios");
@@ -74,7 +74,8 @@
             </div>
         </div>
         <div class="account-stats">
-            <div class="stat-box"><div class="stat-label">Member Since</div><div class="stat-value">01/01/2025</div></div>
+            <div class="stat-box"><div class="stat-label">Member Since</div><div class="stat-value"><%= (acc.getCreated_at()!= null) ? acc.getCreated_at().substring(0, 10) : "N/A" %></div>
+            </div>
             <div class="stat-box"><div class="stat-label">Last Login</div><div class="stat-value"><%= (acc.getLastLogin() != null) ? acc.getLastLogin() : "N/A" %></div></div>
         </div>
     </section>

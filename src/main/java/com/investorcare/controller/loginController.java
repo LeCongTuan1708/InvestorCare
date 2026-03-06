@@ -35,7 +35,7 @@ public class loginController extends HttpServlet {
             User loginUser = userDao.checkLogin(username, password);
 
             if (loginUser != null) {
-                java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                 String currentTime = dtf.format(java.time.LocalDateTime.now());
                 String lastLoginTime = "First time login";
                 
