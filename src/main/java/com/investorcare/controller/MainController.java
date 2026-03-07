@@ -82,11 +82,22 @@ public class MainController extends HttpServlet {
 
     private static final String REMOVE_CARE_NOTE = "remove-care-note";
     private static final String REMOVE_CARE_NOTE_CONTROLLER = "RemoveCareNoteController";
-
     // Mới thêm: Xem chi tiết Care Note
     private static final String VIEW_CARE_NOTE = "view-care-note";
     private static final String VIEW_CARE_NOTE_CONTROLLER = "ViewCareNoteController";
-
+    private static final String SHOW_CREATE_ALERT = "show-create-alert";
+    private static final String CREATE_ALERT_CONTROLLER = "CreateAlertController";
+    private static final String DELETE_ALERT = "delete-alert";
+    private static final String DELETE_ALERT_CONTROLLER = "DeleteAlertController";
+    private static final String CREATE_ALERT = "create-alert";
+    private static final String SHOW_VIEW_ALERT = "show-view-alert";
+    private static final String SHOW_VIEW_ALERT_CONTROLLER = "ShowViewAlertController";
+    
+    private static final String SHOW_EDIT_ALERT = "show-edit-alert";
+    private static final String SHOW_EDIT_ALERT_CONTROLLER = "ShowEditAlertController";
+    
+    private static final String UPDATE_ALERT = "update-alert";
+    private static final String UPDATE_ALERT_CONTROLLER = "UpdateAlertController";
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -159,26 +170,40 @@ public class MainController extends HttpServlet {
                 url = LOGOUT_Controller;
             } else if (VIEW_CARE_NOTE.equals(action)) {
                 url = VIEW_CARE_NOTE_CONTROLLER;
-            } else {
+            } else if (SHOW_CREATE_ALERT.equals(action)) {
+                url = CREATE_ALERT_CONTROLLER;
+            } else if (CREATE_ALERT.equals(action)) {
+                url = CREATE_ALERT_CONTROLLER;
+            } else if (DELETE_ALERT.equals(action)) {
+                url = DELETE_ALERT_CONTROLLER;
+            } else if (SHOW_VIEW_ALERT.equals(action)) {
+                url = SHOW_VIEW_ALERT_CONTROLLER;
+            } else if (SHOW_EDIT_ALERT.equals(action)) {
+                url = SHOW_EDIT_ALERT_CONTROLLER;
+            } else if (UPDATE_ALERT.equals(action)) {
+                url = UPDATE_ALERT_CONTROLLER;
+            }else {
                 request.setAttribute("ERROR", "Your action not support");
             }
-        } catch (Exception e) {
+            }catch (Exception e) {
             log("Error at MainController: " + e.toString());
-        } finally {
+        }finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
-    }
+        }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        @Override
+        protected void doGet
+        (HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
+            processRequest(request, response);
+        }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        @Override
+        protected void doPost
+        (HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
+            processRequest(request, response);
+        }
 
-}
+    }

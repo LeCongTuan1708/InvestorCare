@@ -409,3 +409,106 @@ section[id], .holdings-panel {
   white-space: normal;
   word-break: break-word;
 }
+/*//////////////////////////////////////ALEART*/
+/* ── Page layout ── */
+        .page-wrapper {
+            display: flex; justify-content: center;
+            padding: 40px 20px;
+        }
+        .form-card {
+            width: 100%; max-width: 680px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            animation: fadeIn .3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity:0; transform:translateY(8px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* ── Card header ── */
+        .form-card-header {
+            background: var(--bg-surface);
+            padding: 28px 36px;
+            border-bottom: 1px solid var(--border);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+        .form-card-header h2 { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+        .form-card-header p  { font-size: 13px; color: var(--text-secondary); }
+
+        /* ── Form body ── */
+        .form-body { padding: 32px 36px; }
+
+        .form-group { margin-bottom: 22px; }
+        .form-group label {
+            display: block; font-size: 11px; font-weight: 600;
+            color: var(--text-secondary); text-transform: uppercase;
+            letter-spacing: .5px; margin-bottom: 8px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%; padding: 10px 14px;
+            background: var(--bg-surface); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text-primary);
+            font-family: inherit; font-size: 13px; transition: border-color .2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none; border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,229,160,.1);
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder { color: var(--text-muted); }
+        .form-group textarea { resize: vertical; min-height: 90px; }
+        .form-group select option { background: var(--bg-surface); }
+
+        /* ── Section divider ── */
+        .form-section-title {
+            font-size: 12px; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .8px;
+            padding-bottom: 12px; margin-bottom: 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* ── Setting row (condition + value + symbol in a grid) ── */
+        .setting-grid {
+            display: grid;
+            grid-template-columns: 160px 1fr 1fr;
+            gap: 14px;
+        }
+
+        /* ── Severity toggle ── */
+        .severity-group { display: flex; gap: 10px; }
+        .severity-btn {
+            flex: 1; padding: 9px 0; border-radius: var(--radius-sm);
+            border: 1px solid var(--border); background: var(--bg-surface);
+            color: var(--text-secondary); font-size: 12px; font-weight: 600;
+            cursor: pointer; text-align: center; transition: .2s;
+        }
+        .severity-btn:hover { border-color: var(--border); background: var(--bg-hover); }
+        .severity-btn input[type="radio"] { display: none; }
+        .severity-btn.sel-low    { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+        .severity-btn.sel-medium { border-color: var(--amber);  color: var(--amber);  background: rgba(245,158,11,.1); }
+        .severity-btn.sel-high   { border-color: var(--red);    color: var(--red);    background: var(--red-dim); }
+
+        /* ── Actions ── */
+        .form-actions {
+            display: flex; gap: 12px; margin-top: 28px;
+            padding-top: 20px; border-top: 1px solid var(--border-subtle);
+        }
+        .form-actions .btn { flex: 1; justify-content: center; padding: 11px; }
+
+        /* ── Messages ── */
+        .msg-error, .msg-success {
+            padding: 12px 16px; border-radius: var(--radius-sm);
+            font-size: 13px; font-weight: 500; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .msg-error   { background: var(--red-dim);   border-left: 3px solid var(--red);   color: #fca5a5; }
+        .msg-success { background: var(--accent-dim); border-left: 3px solid var(--accent); color: var(--accent); }

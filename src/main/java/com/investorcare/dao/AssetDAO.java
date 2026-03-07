@@ -6,6 +6,7 @@ package com.investorcare.dao;
 
 import com.investorcare.model.Asset;
 import com.investorcare.model.AssetHealth;
+import com.investorcare.model.AssetQuote;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +28,7 @@ public class AssetDAO implements DAOInterface<Asset> {
     private static final String SELECT_ALL = "SELECT * from ASSET WHERE 1=1";
     private static final String SELECT = "SELECT * FROM ASSET WHERE (SYMBOL LIKE ? OR NAME LIKE ?)";
     private static final String SELECT_ID = "SELECT * FROM ASSET WHERE ASSET_ID = ? ";
-    private static final String SELECT_NAME= "SELECT * FROM ASSET WHERE NAME = ? ";
+    private static final String SELECT_NAME = "SELECT * FROM ASSET WHERE NAME = ? ";
     private static final String INSERT = "INSERT INTO ASSET(TYPE,SYMBOL,EXCHANGE,NAME,STATUS,VISIBLE,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)";
     private static final String UPDATE = "UPDATE ASSET set TYPE = ?, SYMBOL = ?, EXCHANGE = ?, NAME = ?, STATUS =?,VISIBLE = ?, updated_at = SYSDATETIME() WHERE ASSET_ID = ?";
 
@@ -226,6 +227,7 @@ public class AssetDAO implements DAOInterface<Asset> {
         }
         return kq;
     }
+
     public int selectByName(String t) throws ClassNotFoundException, SQLException {
         int dem = 0;
         Connection conn = null;
@@ -240,7 +242,7 @@ public class AssetDAO implements DAOInterface<Asset> {
 
             while (rs.next()) {
                 dem++;
-                
+
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(AssetDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -413,8 +415,7 @@ public class AssetDAO implements DAOInterface<Asset> {
     public Asset selectById(Asset t) throws ClassNotFoundException, SQLException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
-    
+
     //kiểm tra trùng symbol
     public boolean existsBySymbol(String symbol) throws Exception {
         String sql = "SELECT COUNT(*) FROM ASSET WHERE symbol = ?";
@@ -428,103 +429,92 @@ public class AssetDAO implements DAOInterface<Asset> {
         }
         return false;
     }
-    
-    public void savePriceToHistory(int assetId, double price) {
-    String sql = 
-        "IF NOT EXISTS ( "
-      + "    SELECT 1 FROM PRICE_BAR "
-      + "    WHERE ASSET_ID = ? "
-      + "    AND TS >= DATEADD(MINUTE, -1, SYSDATETIME()) "
-      + ") "
-      + "INSERT INTO PRICE_BAR (ASSET_ID, TS, [OPEN], HIGH, LOW, [CLOSE], VOLUME, SOURCE) "
-      + "VALUES (?, SYSDATETIME(), ?, ?, ?, ?, 0, 'YahooFinance')";
 
-    Connection conn = null;
-    PreparedStatement pst = null;
-    try {
-        conn = JDBCUtils.getConnection();
-        pst = conn.prepareStatement(sql);
-        pst.setInt(1, assetId);   // cho IF NOT EXISTS
-        pst.setInt(2, assetId);   // cho INSERT
-        pst.setDouble(3, price);  // OPEN
-        pst.setDouble(4, price);  // HIGH
-        pst.setDouble(5, price);  // LOW
-        pst.setDouble(6, price);  // CLOSE
-        pst.executeUpdate();
-    } catch (Exception e) {
-        System.out.println("Lỗi khi lưu lịch sử giá: " + e.getMessage());
-        e.printStackTrace();
-    } finally {
-        try {
-            if (pst != null) pst.close();
-            if (conn != null) conn.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+    public boolean savePriceToHistory(int assetId, AssetQuote q) {
+        String sql = "INSERT INTO PRICE_BAR (ASSET_ID, TS, [OPEN], [HIGH], [LOW], [CLOSE], VOLUME, SOURCE) "
+                + "VALUES (?, GETDATE(), ?, ?, ?, ?, ?, ?)";
+
+        try ( Connection conn = JDBCUtils.getConnection();  PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setInt(1, assetId);
+            pst.setDouble(2, q.getOpen());
+            pst.setDouble(3, q.getDayHigh());
+            pst.setDouble(4, q.getDayLow());
+            pst.setDouble(5, q.getCurrentPrice()); // Giá hiện tại đóng vai trò là Close
+            pst.setDouble(6, 0.0);                 // Volume mặc định
+            pst.setString(7, "FINNHUB");           // Nguồn dữ liệu
+
+            int rowAffected = pst.executeUpdate();
+            return rowAffected > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return false;
     }
-}
 
     public double getLatestPrice(int assetId) {
-    double price = 0;
+        double price = 0;
 
-    try {
-        Connection conn = JDBCUtils.getConnection();
+        try {
+            Connection conn = JDBCUtils.getConnection();
 
-        String sql = "SELECT TOP 1 [CLOSE] FROM PRICE_BAR "
-                   + "WHERE ASSET_ID = ? ORDER BY TS DESC";
+            String sql = "SELECT TOP 1 [CLOSE] FROM PRICE_BAR "
+                    + "WHERE ASSET_ID = ? ORDER BY TS DESC";
 
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, assetId);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, assetId);
 
-        ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            price = rs.getDouble("CLOSE");
+            if (rs.next()) {
+                price = rs.getDouble("CLOSE");
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        conn.close();
-    } catch (Exception e) {
-        e.printStackTrace();
+        return price;
     }
 
-    return price;
-}
     //GET ASSET LIST IN THE DATABASE
     public List<Asset> getAllAssets() {
 
-    List<Asset> list = new ArrayList<>();
+        List<Asset> list = new ArrayList<>();
 
-    try {
-        Connection conn = JDBCUtils.getConnection();
+        try {
+            Connection conn = JDBCUtils.getConnection();
 
-        String sql = "SELECT * FROM ASSET WHERE STATUS = 'Active' AND VISIBLE = 1";
+            String sql = "SELECT * FROM ASSET WHERE STATUS = 'Active' AND VISIBLE = 1";
 
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
 
-        while (rs.next()) {
+            while (rs.next()) {
 
-            Asset a = new Asset();
+                Asset a = new Asset();
 
-            a.setAssetId(rs.getInt("ASSET_ID"));
-            a.setType(rs.getString("TYPE"));
-            a.setSymbol(rs.getString("SYMBOL"));
-            a.setExchange(rs.getString("EXCHANGE"));
-            a.setName(rs.getString("NAME"));
-            a.setStatus(rs.getString("STATUS"));
-            a.setVisible(rs.getBoolean("VISIBLE"));
-            a.setCreatedAt(rs.getTimestamp("CREATED_AT"));
-            a.setUpdatedAt(rs.getTimestamp("UPDATED_AT"));
+                a.setAssetId(rs.getInt("ASSET_ID"));
+                a.setType(rs.getString("TYPE"));
+                a.setSymbol(rs.getString("SYMBOL"));
+                a.setExchange(rs.getString("EXCHANGE"));
+                a.setName(rs.getString("NAME"));
+                a.setStatus(rs.getString("STATUS"));
+                a.setVisible(rs.getBoolean("VISIBLE"));
+                a.setCreatedAt(rs.getTimestamp("CREATED_AT"));
+                a.setUpdatedAt(rs.getTimestamp("UPDATED_AT"));
 
-            list.add(a);
+                list.add(a);
+            }
+
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        conn.close();
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        return list;
     }
-
-    return list;
-}
 }

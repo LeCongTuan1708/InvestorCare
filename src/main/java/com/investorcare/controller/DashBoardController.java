@@ -82,35 +82,32 @@ public class DashBoardController extends HttpServlet {
         SignalEngine engine = new SignalEngine();
 
         for (Asset a : assets) {
-
             AssetQuote q = apiQuotes.getOrDefault(a.getSymbol(), new AssetQuote());
             quoteMap.put(a.getAssetId(), q);
 
             if (q.getCurrentPrice() > 0) {
-
                 try {
-
                     PriceBar latest = priceBarDAO.getLatest(a.getAssetId());
 
+                    // Nếu chưa có lịch sử HOẶC giá đóng cửa khác giá hiện tại thì mới lưu
                     if (latest == null || latest.getClose() != q.getCurrentPrice()) {
 
-                        assetDAO.savePriceToHistory(a.getAssetId(), q.getCurrentPrice());
+                        // Gọi hàm savePriceToHistory mới đã được update ở DAO
+                        assetDAO.savePriceToHistory(a.getAssetId(), q);
 
                         // Trigger Signal + Alert system
                         engine.checkVolatility(a.getAssetId(), user.getUserId());
-
                     }
-
                 } catch (Exception e) {
                     System.out.println(">>> Save price error: " + e.getMessage());
                 }
-
             }
         }
 
         request.setAttribute("assets", assets);
         request.setAttribute("quotes", quoteMap);
         request.setAttribute("portfolios", portfolios);
+
 
         // ── 6. Load holdings nếu user mở portfolio ──
         String openParam = request.getParameter("openPortfolioId");
