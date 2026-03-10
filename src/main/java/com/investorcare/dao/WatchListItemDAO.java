@@ -133,6 +133,41 @@ public class WatchListItemDAO {
 
     }
     
-    
+    public boolean checkItemExists(int watchListId, int assetId) throws SQLException {
+        boolean isExist = false;
+        Connection conn = null;
+        PreparedStatement ptm = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT 1 FROM WATCHLIST_ITEM WHERE WATCHLIST_ID = ? AND ASSET_ID = ?";
+
+        try {
+            conn = JDBCUtils.getConnection();
+            if (conn != null) {
+                ptm = conn.prepareStatement(sql);
+                ptm.setInt(1, watchListId);
+                ptm.setInt(2, assetId);
+                rs = ptm.executeQuery();
+
+                // Nếu rs.next() trả về true nghĩa là đã có dòng dữ liệu trùng
+                if (rs.next()) {
+                    isExist = true;
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ptm != null) {
+                ptm.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return isExist;
+    }
     
 }

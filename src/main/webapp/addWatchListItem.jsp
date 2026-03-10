@@ -79,7 +79,7 @@
             color: #e8f0fc;
             font-size: 15px;
             cursor: pointer;
-            appearance: none; /* Bỏ icon mặc định của trình duyệt */
+            appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%237a94b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 15px center;
@@ -144,6 +144,13 @@
             <h2>➕ Thêm Vào Thư Mục</h2>
             <p>Chọn các mã cổ phiếu hoặc vàng tiềm năng để bắt đầu theo dõi trong danh sách của m</p>
         </div>
+
+        <%-- HIỂN THỊ THÔNG BÁO LỖI NẾU BỊ TRÙNG Ở ĐÂY NÈ --%>
+        <c:if test="${not empty ERROR_MSG}">
+            <div style="background: rgba(244,63,94,.1); border: 1px solid rgba(244,63,94,.3); color: #f43f5e; padding: 12px 16px; border-radius: 12px; margin-bottom: 24px; font-size: 14px; font-weight: 600; text-align: center; animation: fadeIn 0.3s ease-out;">
+                ⚠️ ${ERROR_MSG}
+            </div>
+        </c:if>
 
         <form action="MainController" method="POST">
             <input type="hidden" name="action" value="add-item">

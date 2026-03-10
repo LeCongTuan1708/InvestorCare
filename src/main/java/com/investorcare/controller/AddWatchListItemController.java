@@ -42,25 +42,43 @@ public class AddWatchListItemController extends HttpServlet {
                 int watchListId = Integer.parseInt(watchListIdStr);
                 int assetId = Integer.parseInt(assetIdStr);
 
-
-                WatchListItem item = new WatchListItem();
-                item.setWatchListId(watchListId);
-                item.setAssetId(assetId);
-
-                // Gọi DAO Insert
                 com.investorcare.dao.WatchListItemDAO dao = new com.investorcare.dao.WatchListItemDAO();
-                boolean check = dao.insert(item);
 
-                if (check) {
-                    // Thành công thì dùng Redirect đá về trang Chi Tiết Thư Mục cũ để nó load lại data
-                    url = "MainController?action=watchlist-item&selectedId=" + watchListId;
+                // KHÚC CHẶN CỬA: Kiểm tra xem mã này đã có trong thư mục chưa
+                boolean isExist = dao.checkItemExists(watchListId, assetId);
+
+                if (isExist) {
+                    // NẾU BỊ TRÙNG: Quăng thông báo lỗi và bẻ lái về lại trang Thêm (Forward)
+                    request.setAttribute("ERROR_MSG", "Mã tài sản này đã có trong thư mục theo dõi rồi!");
+
+                    // Giữ lại ID thư mục để trang addWatchListItem.jsp không bị mồ côi
+                    request.setAttribute("CURRENT_WATCHLIST_ID", watchListId);
+
+                    // Lưu ý: Chỗ này m phải forward về cái Action chuyên hiển thị trang Add
+                    // (Giả sử action của m tên là "show-add-item", m sửa lại cho đúng tên trong MainController nhé)
+                    url = "MainController?action=show-add-item&watchListId=" + watchListId;
+                    request.getRequestDispatcher(url).forward(request, response);
+
+                    return; // Dừng luôn hàm, không cho chạy xuống đoạn Redirect bên dưới
+                } else {
+                    // NẾU CHƯA CÓ: Thực hiện code thêm mới như cũ
+                    WatchListItem item = new WatchListItem();
+                    item.setWatchListId(watchListId);
+                    item.setAssetId(assetId);
+
+                    boolean check = dao.insert(item);
+
+                    if (check) {
+                        // Thành công thì dùng Redirect đá về trang Chi Tiết Thư Mục
+                        url = "MainController?action=watchlist-item&selectedId=" + watchListId;
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Bẻ lái (PRG Pattern chống F5 nè)
+        // Bẻ lái (PRG Pattern chống F5)
         response.sendRedirect(url);
     }
 
