@@ -83,23 +83,7 @@ User acc = (User) session.getAttribute("LOGIN_USER");
     </section>
 
         <!-- ===== NAV TABS ===== -->
-        <div class="nav-tabs">
-            <a href="#account"   class="tab-link active"><span class="icon">👤</span> Account</a>
-            <a href="#market"    class="tab-link"><span class="icon">📊</span> Market</a>
-            <a href="#portfolio" class="tab-link"><span class="icon">💼</span> Portfolio</a>
-            <a href="#watchlist" class="tab-link"><span class="icon">👁️</span> WatchList</a>
-            <a href="#alerts"    class="tab-link">
-                <span class="icon">🔔</span> Alerts
-                <% if (unreadCount > 0) {%><span class="badge-count"><%= unreadCount%> new</span><% }%>
-            </a>
-            <a href="#carenote"  class="tab-link"><span class="icon">📝</span> Care Note</a>
-        </div>
-
-        <!-- ===== CONTENT ===== -->
-        <div class="content">
-
-           
-
+        
             <!-- MARKET -->
             <section id="market" class="section-card">
                 <div class="section-header">
