@@ -98,26 +98,7 @@ User acc = (User) session.getAttribute("LOGIN_USER");
         <!-- ===== CONTENT ===== -->
         <div class="content">
 
-            <!-- ACCOUNT -->
-            <section id="account" class="section-card">
-                <div class="section-header">
-                    <div class="section-title"><span class="icon">👤</span> Account</div>
-                    <form action="MainController" method="GET">
-                        <button type="submit" name="action" value="editProfile" class="btn btn-light">✏️ Edit Profile</button>
-                    </form>
-                </div>
-                <div class="account-info">
-                    <div class="account-avatar"><%= acc.getUsername().substring(0, 1).toUpperCase()%></div>
-                    <div>
-                        <div class="account-name"><%= acc.getUsername()%></div>
-                        <div style="margin-top:6px;"><span class="badge badge-green">● Active</span></div>
-                    </div>
-                </div>
-                <div class="account-stats">
-                    <div class="stat-box"><div class="stat-label">Member Since</div><div class="stat-value">01/01/2025</div></div>
-                    <div class="stat-box"><div class="stat-label">Last Login</div><div class="stat-value">26/02/2026</div></div>
-                </div>
-            </section>
+           
 
             <!-- MARKET -->
             <section id="market" class="section-card">
