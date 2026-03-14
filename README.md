@@ -35,7 +35,7 @@ External APIs used:
 ## Technologies Used
 
 - Java Servlet & JSP
-- MySQL Database
+- Mircrosoft SQL Server 
 - Bootstrap 5
 - TradingView Chart Widget
 - Finnhub API
