@@ -5,13 +5,13 @@
     if (acc == null) { response.sendRedirect("login.jsp"); return; }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đổi Tên Thư Mục — InvestorCare</title>
+    <title>Rename Watchlist — InvestorCare</title>
     <style>
-        /* ===== CSS ĐỒNG BỘ HÓA HỆ THỐNG ===== */
+        /* ===== SYSTEM CSS ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -22,7 +22,7 @@
             flex-direction: column;
         }
 
-        /* ===== NAVBAR GỌN GÀNG ===== */
+        /* ===== NAVBAR ===== */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0;
             z-index: 1000; height: 64px;
@@ -33,7 +33,7 @@
         .navbar-brand { font-size: 18px; font-weight: 700; color: #e8f0fc; display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .navbar-brand-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #00e5a0, #00bcd4); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
 
-        /* ===== CONTAINER CHÍNH ===== */
+        /* ===== MAIN CONTAINER ===== */
         .page-wrapper {
             flex: 1;
             display: flex;
@@ -53,7 +53,6 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             animation: fadeIn .4s ease-out;
         }
-        /* Vạch màu gradient đặc trưng */
         .edit-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
             background: linear-gradient(90deg, #3b82f6, #6366f1);
@@ -67,7 +66,7 @@
         /* ===== FORM STYLES ===== */
         .form-group { margin-bottom: 24px; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; color: #7a94b8; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
+
         .input-control {
             width: 100%;
             padding: 14px 18px;
@@ -131,8 +130,8 @@
 <div class="page-wrapper">
     <div class="edit-card">
         <div class="card-header">
-            <h2>✏️ Chỉnh Sửa Thư Mục</h2>
-            <p>Thay đổi tên thư mục để quản lý tài sản tốt hơn</p>
+            <h2>✏️ Edit Watchlist</h2>
+            <p>Rename your watchlist for better asset management</p>
         </div>
 
         <form action="MainController" method="POST">
@@ -140,16 +139,16 @@
             <input type="hidden" name="txtWatchListId" value="${param.id}">
 
             <div class="form-group">
-                <label>Tên thư mục mới</label>
-                <input type="text" class="input-control" name="txtNewName" 
+                <label>New Watchlist Name</label>
+                <input type="text" class="input-control" name="txtNewName"
                        value="${param.oldName}" required="required"
-                       placeholder="Ví dụ: Cổ phiếu công nghệ...">
+                       placeholder="e.g., Tech Stocks...">
             </div>
 
-            <button type="submit" class="btn-save">Lưu Thay Đổi</button>
-            
+            <button type="submit" class="btn-save">Save Changes</button>
+
             <a href="MainController?action=watch-list" class="btn-cancel">
-                ← Quay lại danh sách
+                ← Back to list
             </a>
         </form>
     </div>

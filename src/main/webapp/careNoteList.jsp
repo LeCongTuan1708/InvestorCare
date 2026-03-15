@@ -12,11 +12,11 @@
     if (acc == null) { response.sendRedirect("login.jsp"); return; }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nhật Ký Đầu Tư — InvestorCare</title>
+    <title>Investment Journal — InvestorCare</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -140,17 +140,17 @@
 
     <div class="page-header">
         <div class="page-header-left">
-            <h1>📝 Nhật Ký Đầu Tư</h1>
-            <p>Ghi chép chiến lược, nhận định và cảm nhận về từng mã chứng khoán</p>
+            <h1>📝 Investment Journal</h1>
+            <p>Record your strategies, insights, and analysis for each asset</p>
         </div>
         <a href="MainController?action=show-add-care-note" class="btn-add">
-            <span>＋</span> Viết Nhật Ký Mới
+            <span>＋</span> Write New Entry
         </a>
     </div>
 
     <div class="stats-bar">
         <div class="stat-card">
-            <div class="label">Tổng nhật ký</div>
+            <div class="label">Total Entries</div>
             <div class="value accent">
                 <c:choose>
                     <c:when test="${empty LIST_CARENOTE}">0</c:when>
@@ -158,31 +158,27 @@
                 </c:choose>
             </div>
         </div>
-        
-        <%-- Logic đếm tự động số lượng --%>
+
         <%
             java.util.List<com.investorcare.model.CareNote> listCN = (java.util.List<com.investorcare.model.CareNote>) request.getAttribute("LIST_CARENOTE");
             int thisMonthCount = 0;
             int uniqueAssetsCount = 0;
-            
+
             if (listCN != null && !listCN.isEmpty()) {
                 java.util.Set<String> uniqueSymbols = new java.util.HashSet<>();
-                
-                // Lấy tháng và năm hiện tại
+
                 java.util.Calendar cal = java.util.Calendar.getInstance();
                 int currentMonth = cal.get(java.util.Calendar.MONTH);
                 int currentYear = cal.get(java.util.Calendar.YEAR);
-                
+
                 for (com.investorcare.model.CareNote note : listCN) {
-                    // Đếm số mã chứng khoán riêng biệt
                     if (note.getAsset() != null && note.getAsset().getSymbol() != null) {
                         uniqueSymbols.add(note.getAsset().getSymbol());
                     }
-                    
-                    // Đếm số lượng nhật ký trong tháng này
+
                     if (note.getCreatedAt() != null) {
                         cal.setTime(note.getCreatedAt());
-                        if (cal.get(java.util.Calendar.MONTH) == currentMonth && 
+                        if (cal.get(java.util.Calendar.MONTH) == currentMonth &&
                             cal.get(java.util.Calendar.YEAR) == currentYear) {
                             thisMonthCount++;
                         }
@@ -195,18 +191,18 @@
         %>
 
         <div class="stat-card">
-            <div class="label">Tháng này</div>
+            <div class="label">This Month</div>
             <div class="value">${NOTES_THIS_MONTH}</div>
         </div>
         <div class="stat-card">
-            <div class="label">Mã được theo dõi</div>
+            <div class="label">Assets Tracked</div>
             <div class="value">${UNIQUE_ASSETS}</div>
         </div>
     </div>
 
     <div class="toolbar">
         <div class="search-wrap">
-            <input type="text" id="searchInput" placeholder="Tìm kiếm theo tiêu đề, nội dung, mã tài sản..." oninput="filterNotes()">
+            <input type="text" id="searchInput" placeholder="Search by title, content, or asset ticker..." oninput="filterNotes()">
         </div>
     </div>
 
@@ -216,15 +212,14 @@
             <c:when test="${empty LIST_CARENOTE}">
                 <div class="empty-state">
                     <div class="empty-icon">📔</div>
-                    <h3>Chưa có nhật ký nào</h3>
-                    <p>Bắt đầu ghi chép hành trình đầu tư của bạn ngay hôm nay!</p>
+                    <h3>No journal entries yet</h3>
+                    <p>Start documenting your investment journey today!</p>
                     <a href="MainController?action=show-add-care-note" class="btn-add">
-                        ＋ Viết Nhật Ký Đầu Tiên
+                        ＋ Write First Entry
                     </a>
                 </div>
             </c:when>
             <c:otherwise>
-                <%-- Cycling color classes --%>
                 <c:forEach var="item" items="${LIST_CARENOTE}" varStatus="status">
                     <c:choose>
                         <c:when test="${status.index % 5 == 0}"><c:set var="colorClass" value="color-teal"/></c:when>
@@ -242,10 +237,10 @@
                             <span class="note-ticker">📌 ${item.asset.symbol}</span>
                             <div class="note-actions">
                                 <a href="MainController?action=show-edit-care-note&noteId=${item.noteId}"
-                                   class="edit" title="Sửa">✏️</a>
+                                   class="edit" title="Edit">✏️</a>
                                 <a href="MainController?action=remove-care-note&noteId=${item.noteId}"
-                                   class="delete" title="Xóa"
-                                   onclick="return confirm('Bạn có chắc muốn xóa nhật ký này không?')">🗑</a>
+                                   class="delete" title="Delete"
+                                   onclick="return confirm('Are you sure you want to delete this journal entry?')">🗑</a>
                             </div>
                         </div>
                         <div class="note-title">${item.title}</div>
@@ -253,7 +248,7 @@
                         <div class="note-footer">
                             <span class="note-date">🗓 ${item.createdAt}</span>
                             <a href="MainController?action=view-care-note&noteId=${item.noteId}"
-                               class="note-read-more">Xem chi tiết →</a>
+                               class="note-read-more">View details →</a>
                         </div>
                     </div>
                 </c:forEach>

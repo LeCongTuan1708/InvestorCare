@@ -8,13 +8,13 @@
     }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tạo Thư Mục Mới — InvestorCare</title>
+        <title>Create New Watchlist — InvestorCare</title>
         <style>
-            /* ===== CSS ĐỒNG BỘ HÓA HỆ THỐNG ===== */
+            /* ===== SYSTEM CSS ===== */
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body {
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -36,7 +36,7 @@
             .navbar-brand { font-size: 18px; font-weight: 700; color: #e8f0fc; display: flex; align-items: center; gap: 10px; text-decoration: none; }
             .navbar-brand-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #00e5a0, #00bcd4); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
 
-            /* ===== CONTAINER CHÍNH ===== */
+            /* ===== MAIN CONTAINER ===== */
             .page-wrapper {
                 flex: 1; display: flex; align-items: center; justify-content: center; padding: 80px 20px;
             }
@@ -92,25 +92,24 @@
         <div class="page-wrapper">
             <div class="add-card">
                 <div class="card-header">
-                    <h2>🆕 Tạo Thư Mục Mới</h2>
-                    <p>Xây dựng danh sách theo dõi tài sản của bạn </p>
+                    <h2>🆕 Create New Watchlist</h2>
+                    <p>Build your personalized asset tracking list</p>
                 </div>
 
-                <%-- PHẦN QUAN TRỌNG NHẤT M BỊ THIẾU Ở ĐÂY --%>
                 <form action="MainController" method="POST">
                     <input type="hidden" name="action" value="add-watchlist">
 
                     <div class="form-group">
-                        <label>Tên Thư Mục Mới</label>
-                        <input type="text" class="input-control" name="txtWatchListName" 
-                               placeholder="Nhập tên thư mục (vd: Cổ phiếu AI...)" 
+                        <label>Watchlist Name</label>
+                        <input type="text" class="input-control" name="txtWatchListName"
+                               placeholder="Enter a name (e.g., AI Stocks...)"
                                required="required" autofocus>
                     </div>
 
-                    <button type="submit" class="btn-submit">Lưu Thư Mục</button>
-                    
+                    <button type="submit" class="btn-submit">Save Watchlist</button>
+
                     <a href="MainController?action=watch-list" class="btn-back">
-                        ← Quay lại danh sách
+                        ← Back to list
                     </a>
                 </form>
             </div>

@@ -6,13 +6,12 @@
     if (acc == null) { response.sendRedirect("login.jsp"); return; }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Nhật Ký — InvestorCare</title>
+    <title>Journal Detail — InvestorCare</title>
     <style>
-        /* Đồng bộ CSS với hệ thống */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #0a0e27; color: #e8f0fc; min-height: 100vh; }
         .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; display: flex; align-items: center; justify-content: space-between; background: rgba(7,13,26,.98); border-bottom: 1px solid #162038; padding: 0 32px; }
@@ -26,12 +25,11 @@
         .edit-header { background: #0d1526; padding: 32px 40px; border-bottom: 1px solid #1e3050; border-radius: 16px 16px 0 0; }
         .edit-header h2 { font-size: 24px; font-weight: 600; color: #e8f0fc; margin-bottom: 6px; }
         .edit-header p { font-size: 14px; color: #7a94b8; }
-        
+
         .content-body { padding: 40px; }
         .form-group { margin-bottom: 24px; }
         .form-group label { display: block; font-weight: 500; margin-bottom: 8px; color: #7a94b8; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        /* Box Read-only thay cho input */
+
         .read-only-box { width: 100%; padding: 16px; border: 1px solid #1e3050; border-radius: 8px; font-size: 14.5px; background: #0d1526; color: #00e5a0; font-weight: 500; line-height: 1.6; }
         .read-only-text { color: #e8f0fc; white-space: pre-wrap; font-weight: 400; }
 
@@ -58,13 +56,13 @@
 <div class="page-wrapper">
     <div class="edit-container">
         <div class="edit-header">
-            <h2>📄 Chi Tiết Nhật Ký</h2>
-            <p>Xem lại nhận định và phân tích của bạn</p>
+            <h2>📄 Journal Detail</h2>
+            <p>Review your notes and market analysis</p>
         </div>
 
         <div class="content-body">
             <div class="form-group">
-                <label>Mã Tài Sản (Ticker)</label>
+                <label>Asset Ticker</label>
                 <div class="read-only-box">
                     <c:forEach var="asset" items="${LIST_ASSET}">
                         <c:if test="${asset.assetId == CARE_NOTE.assetId}">
@@ -75,18 +73,18 @@
             </div>
 
             <div class="form-group">
-                <label>Tiêu đề</label>
+                <label>Title</label>
                 <div class="read-only-box read-only-text">${CARE_NOTE.title}</div>
             </div>
 
             <div class="form-group">
-                <label>Nội dung chi tiết</label>
+                <label>Detailed Content</label>
                 <div class="read-only-box read-only-text">${CARE_NOTE.content}</div>
             </div>
 
             <div class="form-actions">
-                <a href="MainController?action=show-edit-care-note&noteId=${CARE_NOTE.noteId}" class="btn btn-primary">✏️ Chỉnh Sửa</a>
-                <a href="MainController?action=care-note-list" class="btn btn-secondary">🔙 Quay Lại</a>
+                <a href="MainController?action=show-edit-care-note&noteId=${CARE_NOTE.noteId}" class="btn btn-primary">✏️ Edit</a>
+                <a href="MainController?action=care-note-list" class="btn btn-secondary">🔙 Back</a>
             </div>
         </div>
     </div>

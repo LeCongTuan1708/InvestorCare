@@ -7,13 +7,12 @@
     if (acc == null) { response.sendRedirect("login.jsp"); return; }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Sách WatchList — InvestorCare</title>
+    <title>Watchlists — InvestorCare</title>
     <style>
-        /* ===== CSS ĐỒNG BỘ TỪ CARENOTE ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -55,19 +54,18 @@
         .wl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
         .wl-card { background: #111d30; border: 1px solid #1e3050; border-radius: 14px; padding: 24px; transition: all .25s ease; position: relative; overflow: hidden; animation: fadeIn .35s ease-out both; }
         .wl-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-        
-        /* Đổ màu gradient theo index m thích */
+
         .color-teal::before   { background: linear-gradient(90deg, #00e5a0, #00bcd4); }
         .color-blue::before   { background: linear-gradient(90deg, #3b82f6, #6366f1); }
         .color-amber::before  { background: linear-gradient(90deg, #f59e0b, #ef4444); }
         .color-purple::before { background: linear-gradient(90deg, #a855f7, #ec4899); }
         .color-rose::before   { background: linear-gradient(90deg, #f43f5e, #f97316); }
-        
+
         .wl-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.4); border-color: #2a4070; }
 
         .wl-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .wl-icon { width: 42px; height: 42px; background: rgba(255,255,255,0.03); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        
+
         .wl-name { font-size: 18px; font-weight: 700; color: #e8f0fc; margin-bottom: 4px; }
         .wl-meta { font-size: 12px; color: #7a94b8; margin-bottom: 20px; }
 
@@ -108,11 +106,11 @@
 
     <div class="page-header">
         <div class="page-header-left">
-            <h1>👁️ WatchLists</h1>
-            <p>Danh sách các thư mục theo dõi tài sản</p>
+            <h1>👁️ Watchlists</h1>
+            <p>Manage your asset tracking folders</p>
         </div>
         <a href="MainController?action=show-add-watchlist" class="btn-add">
-            <span>＋</span> Tạo Thư Mục Mới
+            <span>＋</span> Create New Watchlist
         </a>
     </div>
 
@@ -121,8 +119,8 @@
             <c:when test="${empty LIST_WATCHLIST}">
                 <div class="empty-state">
                     <div style="font-size: 52px; margin-bottom: 16px;">📁</div>
-                    <h3 style="color: #e8f0fc;">Chưa có thư mục nào m ơi</h3>
-                    <p style="color: #7a94b8; margin-top: 8px;">Tạo một thư mục để bắt đầu săn hàng thôi nào!</p>
+                    <h3 style="color: #e8f0fc;">No watchlists yet</h3>
+                    <p style="color: #7a94b8; margin-top: 8px;">Create a watchlist to start tracking your assets!</p>
                 </div>
             </c:when>
             <c:otherwise>
@@ -141,14 +139,14 @@
                             <div style="color: #3d5270; font-size: 11px; font-weight: 700;">#${item.watchListId}</div>
                         </div>
                         <div class="wl-name">${item.name}</div>
-                        <div class="wl-meta">📅 Ngày tạo: ${item.createAt}</div>
-                        
+                        <div class="wl-meta">📅 Created: ${item.createAt}</div>
+
                         <div class="wl-actions">
-                            <a href="MainController?action=watchlist-item&selectedId=${item.watchListId}" class="wl-btn view">Chi tiết</a>
-                            <a href="MainController?action=show-edit-watchlist&id=${item.watchListId}&oldName=${item.name}" class="wl-btn edit">Sửa</a>
-                            <a href="MainController?action=remove-watchlist&watchListId=${item.watchListId}" 
-                               class="wl-btn delete" 
-                               onclick="return confirm('Cảnh báo: Xóa thư mục này là mất sạch cổ phiếu bên trong. Chắc chưa?');">Xóa</a>
+                            <a href="MainController?action=watchlist-item&selectedId=${item.watchListId}" class="wl-btn view">Details</a>
+                            <a href="MainController?action=show-edit-watchlist&id=${item.watchListId}&oldName=${item.name}" class="wl-btn edit">Edit</a>
+                            <a href="MainController?action=remove-watchlist&watchListId=${item.watchListId}"
+                               class="wl-btn delete"
+                               onclick="return confirm('Warning: Deleting this watchlist will remove all assets inside. Are you sure?');">Delete</a>
                         </div>
                     </div>
                 </c:forEach>

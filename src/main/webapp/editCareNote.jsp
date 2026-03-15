@@ -6,13 +6,12 @@
     if (acc == null) { response.sendRedirect("login.jsp"); return; }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sửa Nhật Ký — InvestorCare</title>
+    <title>Edit Care Note — InvestorCare</title>
     <style>
-        /* Tái sử dụng CSS như trang Add Care Note */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #0a0e27; color: #e8f0fc; min-height: 100vh; }
         .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; display: flex; align-items: center; justify-content: space-between; background: rgba(7,13,26,.98); border-bottom: 1px solid #162038; padding: 0 32px; }
@@ -54,8 +53,8 @@
 <div class="page-wrapper">
     <div class="edit-container">
         <div class="edit-header">
-            <h2>✏️ Cập Nhật Nhật Ký</h2>
-            <p>Chỉnh sửa chiến lược và nhận định của bạn</p>
+            <h2>✏️ Edit Care Note</h2>
+            <p>Update your investment strategy and analysis</p>
         </div>
 
         <form action="MainController" method="POST">
@@ -63,7 +62,7 @@
             <input type="hidden" name="noteId" value="${CARE_NOTE.noteId}">
 
             <div class="form-group">
-                <label>Mã Tài Sản (Ticker)</label>
+                <label>Asset Symbol (Ticker)</label>
                 <select name="assetId" required>
                     <c:forEach var="asset" items="${LIST_ASSET}">
                         <option value="${asset.assetId}" <c:if test="${asset.assetId == CARE_NOTE.assetId}">selected</c:if>>
@@ -74,18 +73,18 @@
             </div>
 
             <div class="form-group">
-                <label>Tiêu đề</label>
+                <label>Title</label>
                 <input type="text" name="title" value="${CARE_NOTE.title}" required>
             </div>
 
             <div class="form-group">
-                <label>Nội dung</label>
+                <label>Content</label>
                 <textarea name="content" rows="6" required>${CARE_NOTE.content}</textarea>
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">🔄 Cập Nhật Nhật Ký</button>
-                <a href="MainController?action=care-note-list" class="btn btn-secondary">❌ Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary">🔄 Update Note</button>
+                <a href="MainController?action=care-note-list" class="btn btn-secondary">❌ Cancel</a>
             </div>
         </form>
     </div>

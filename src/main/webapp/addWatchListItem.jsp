@@ -6,13 +6,13 @@
     if (acc == null) { response.sendRedirect("login.jsp"); return; }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thêm Tài Sản — InvestorCare</title>
+    <title>Add Asset — InvestorCare</title>
     <style>
-        /* ===== CSS ĐỒNG BỘ HÓA HỆ THỐNG ===== */
+        /* ===== SYSTEM CSS ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -34,7 +34,7 @@
         .navbar-brand { font-size: 18px; font-weight: 700; color: #e8f0fc; display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .navbar-brand-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #00e5a0, #00bcd4); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(0,229,160,.25); }
 
-        /* ===== CONTAINER CHÍNH ===== */
+        /* ===== MAIN CONTAINER ===== */
         .page-wrapper {
             flex: 1;
             display: flex;
@@ -54,7 +54,6 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             animation: fadeIn .4s ease-out;
         }
-        /* Vạch màu gradient xanh đặc trưng */
         .add-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
             background: linear-gradient(90deg, #00e5a0, #00bcd4);
@@ -68,8 +67,7 @@
         /* ===== FORM STYLES ===== */
         .form-group { margin-bottom: 28px; }
         .form-group label { display: block; font-size: 12px; font-weight: 700; color: #7a94b8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        /* Style cho Select Dropdown */
+
         .select-control {
             width: 100%;
             padding: 14px 18px;
@@ -141,11 +139,11 @@
 <div class="page-wrapper">
     <div class="add-card">
         <div class="card-header">
-            <h2>➕ Thêm Vào Thư Mục</h2>
-            <p>Chọn các mã cổ phiếu hoặc vàng tiềm năng để bắt đầu theo dõi trong danh sách của m</p>
+            <h2>➕ Add to Watchlist</h2>
+            <p>Select stocks or gold assets to start tracking in your watchlist</p>
         </div>
 
-        <%-- HIỂN THỊ THÔNG BÁO LỖI NẾU BỊ TRÙNG Ở ĐÂY NÈ --%>
+        <%-- SHOW DUPLICATE ERROR MESSAGE IF ANY --%>
         <c:if test="${not empty ERROR_MSG}">
             <div style="background: rgba(244,63,94,.1); border: 1px solid rgba(244,63,94,.3); color: #f43f5e; padding: 12px 16px; border-radius: 12px; margin-bottom: 24px; font-size: 14px; font-weight: 600; text-align: center; animation: fadeIn 0.3s ease-out;">
                 ⚠️ ${ERROR_MSG}
@@ -157,9 +155,9 @@
             <input type="hidden" name="watchListId" value="${CURRENT_WATCHLIST_ID}">
 
             <div class="form-group">
-                <label>Chọn Mã Tài Sản (Asset)</label>
+                <label>Select Asset</label>
                 <select name="assetId" class="select-control" required>
-                    <option value="" disabled selected>-- Chọn một mã tài sản --</option>
+                    <option value="" disabled selected>-- Select an asset --</option>
                     <c:forEach var="asset" items="${LIST_ASSET}">
                         <option value="${asset.assetId}">
                             [${asset.symbol}] - ${asset.name} (${asset.type})
@@ -168,10 +166,10 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn-submit">Xác Nhận Thêm</button>
-            
+            <button type="submit" class="btn-submit">Confirm Add</button>
+
             <a href="MainController?action=watchlist-item&selectedId=${CURRENT_WATCHLIST_ID}" class="btn-back">
-                ← Quay lại chi tiết thư mục
+                ← Back to watchlist detail
             </a>
         </form>
     </div>

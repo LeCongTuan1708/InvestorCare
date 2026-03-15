@@ -7,13 +7,12 @@
     if (acc == null) { response.sendRedirect("login.jsp"); return; }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Thư Mục — InvestorCare</title>
+    <title>Watchlist Detail — InvestorCare</title>
     <style>
-        /* ===== CSS ĐỒNG BỘ TỪ CARENOTE ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -67,7 +66,7 @@
         /* ===== POSITIVE / NEGATIVE ===== */
         .badge-up { background: rgba(0,229,160,.1); color: #00e5a0; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 12px; }
         .badge-down { background: rgba(244,63,94,.1); color: #f43f5e; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 12px; }
-        
+
         .btn-delete { color: #f43f5e; text-decoration: none; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(244,63,94,0.2); transition: 0.2s; }
         .btn-delete:hover { background: rgba(244,63,94,0.1); border-color: #f43f5e; }
 
@@ -85,7 +84,7 @@
     <div class="navbar-right">
         <span class="navbar-greeting">Welcome, <strong><%= acc.getUsername() %></strong></span>
         <div class="navbar-avatar"><%= acc.getUsername().substring(0,1).toUpperCase() %></div>
-        <a href="MainController?action=watch-list" class="navbar-back">← WatchList</a>
+        <a href="MainController?action=watch-list" class="navbar-back">← Watchlists</a>
         <a href="MainController?action=logout" class="navbar-logout">Logout</a>
     </div>
 </nav>
@@ -93,11 +92,11 @@
 <div class="page-wrapper">
     <div class="page-header">
         <div>
-            <h1>📂 Thư Mục: ${not empty WATCHLIST_NAME ? WATCHLIST_NAME : 'Đang tải...'}</h1>
-            <p>Quản lý và cập nhật giá trị các mã tài sản tiềm năng trong danh sách này</p>
+            <h1>📂 Folder: ${not empty WATCHLIST_NAME ? WATCHLIST_NAME : 'Loading...'}</h1>
+            <p>Manage and monitor price movements of assets in this watchlist</p>
         </div>
         <a href="MainController?action=show-add-item&watchListId=${CURRENT_WATCHLIST_ID}" class="btn-add">
-            <span>＋</span> Thêm Mã Tài Sản
+            <span>＋</span> Add Asset
         </a>
     </div>
 
@@ -105,12 +104,12 @@
         <table>
             <thead>
                 <tr>
-                    <th>Loại</th>
-                    <th>Mã (Symbol)</th>
-                    <th>Tên Tài Sản</th>
-                    <th style="text-align: right;">Giá Hiện Tại</th>
-                    <th style="text-align: center;">Biến Động</th>
-                    <th style="text-align: right;">Hành Động</th>
+                    <th>Type</th>
+                    <th>Symbol</th>
+                    <th>Asset Name</th>
+                    <th style="text-align: right;">Current Price</th>
+                    <th style="text-align: center;">Change</th>
+                    <th style="text-align: right;">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -120,8 +119,8 @@
                             <td colspan="6">
                                 <div class="empty-state">
                                     <div class="empty-icon">📊</div>
-                                    <h3 style="color: #7a94b8;">Thư mục này còn trống</h3>
-                                    <p style="color: #3d5270; font-size: 14px; margin-top: 8px;">Hãy thêm các mã chứng khoán để bắt đầu theo dõi biến động giá.</p>
+                                    <h3 style="color: #7a94b8;">This watchlist is empty</h3>
+                                    <p style="color: #3d5270; font-size: 14px; margin-top: 8px;">Add assets to start tracking their price movements.</p>
                                 </div>
                             </td>
                         </tr>
@@ -130,12 +129,12 @@
                         <c:forEach var="item" items="${LIST_WATCHLIST_ITEM}">
                             <c:set var="aId" value="${item.asset.assetId}" />
                             <c:set var="priceBar" value="${LATEST_PRICES[aId]}" />
-                            
+
                             <tr>
                                 <td><span class="asset-type">${item.asset.type}</span></td>
                                 <td><span class="ticker-tag">${item.asset.symbol}</span></td>
                                 <td><div class="asset-name">${item.asset.name}</div></td>
-                                
+
                                 <td style="text-align: right;">
                                     <c:choose>
                                         <c:when test="${not empty priceBar}">
@@ -150,7 +149,7 @@
                                         <c:when test="${not empty priceBar}">
                                             <c:set var="change" value="${priceBar.close - priceBar.open}" />
                                             <c:set var="percent" value="${priceBar.open > 0 ? (change / priceBar.open) * 100 : 0}" />
-                                            
+
                                             <c:choose>
                                                 <c:when test="${change > 0}">
                                                     <span class="badge-up">▲ +<fmt:formatNumber value="${percent}" maxFractionDigits="2"/>%</span>
@@ -168,10 +167,10 @@
                                 </td>
 
                                 <td style="text-align: right;">
-                                    <a href="MainController?action=remove-item&itemId=${item.itemId}&watchListId=${CURRENT_WATCHLIST_ID}" 
+                                    <a href="MainController?action=remove-item&itemId=${item.itemId}&watchListId=${CURRENT_WATCHLIST_ID}"
                                        class="btn-delete"
-                                       onclick="return confirm('Xóa mã này khỏi danh mục theo dõi?');">
-                                        ✕ Gỡ bỏ
+                                       onclick="return confirm('Remove this asset from your watchlist?');">
+                                        ✕ Remove
                                     </a>
                                 </td>
                             </tr>
