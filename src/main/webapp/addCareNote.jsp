@@ -6,13 +6,13 @@
     if (acc == null) { response.sendRedirect("login.jsp"); return; }
 %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thêm Nhật Ký Đầu Tư — InvestorCare</title>
+    <title>Add Investment Journal — InvestorCare</title>
     <style>
-        /* Đồng bộ CSS với hệ thống */
+        /* Sync CSS with system */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #0a0e27; color: #e8f0fc; min-height: 100vh; }
         
@@ -60,17 +60,17 @@
 <div class="page-wrapper">
     <div class="edit-container">
         <div class="edit-header">
-            <h2>✍️ Viết Nhật Ký Đầu Tư</h2>
-            <p>Lưu lại phân tích, nhận định và chiến lược cho từng mã tài sản</p>
+            <h2>✍️ Write Investment Journal</h2>
+            <p>Record your analysis, insights and strategies for each asset ticker</p>
         </div>
 
         <form action="MainController" method="POST">
             <input type="hidden" name="action" value="add-care-note">
 
             <div class="form-group">
-                <label>Chọn Mã Tài Sản (Ticker)</label>
+                <label>Select Asset Ticker</label>
                 <select name="assetId" required>
-                    <option value="" disabled selected>-- Chọn một mã --</option>
+                    <option value="" disabled selected>-- Select a ticker --</option>
                     <c:forEach var="asset" items="${LIST_ASSET}">
                         <option value="${asset.assetId}">[${asset.symbol}] - ${asset.name}</option>
                     </c:forEach>
@@ -78,18 +78,18 @@
             </div>
 
             <div class="form-group">
-                <label>Tiêu đề nhật ký</label>
-                <input type="text" name="title" placeholder="VD: Chiến lược gom hàng Q1/2026..." required>
+                <label>Journal Title</label>
+                <input type="text" name="title" placeholder="E.g: Q1/2026 accumulation strategy..." required>
             </div>
 
             <div class="form-group">
-                <label>Nội dung chi tiết</label>
-                <textarea name="content" rows="6" placeholder="Nhập phân tích, vùng giá mua/bán, điểm cắt lỗ..." required></textarea>
+                <label>Detailed Content</label>
+                <textarea name="content" rows="6" placeholder="Enter analysis, buy/sell price ranges, stop-loss points..." required></textarea>
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">💾 Lưu Nhật Ký</button>
-                <a href="MainController?action=care-note-list" class="btn btn-secondary">❌ Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary">💾 Save Journal</button>
+                <a href="MainController?action=care-note-list" class="btn btn-secondary">❌ Cancel</a>
             </div>
         </form>
     </div>
