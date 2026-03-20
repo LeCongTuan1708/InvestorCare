@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    
     <servlet>
         <servlet-name>EditWatchListController</servlet-name>
         <servlet-class>com.investorcare.controller.EditWatchListController</servlet-class>
@@ -52,6 +53,15 @@
         <servlet-name>RemoveCareNoteController</servlet-name>
         <servlet-class>com.investorcare.controller.RemoveCareNoteController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TestPriceServlet</servlet-name>
+        <servlet-class>com.investorcare.controller.TestPriceServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>WatchListController</servlet-name>
+        <servlet-class>com.investorcare.controller.WatchListController</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>WatchListController</servlet-name>
         <url-pattern>/WatchListController</url-pattern>
@@ -108,24 +118,17 @@
         <servlet-name>RemoveCareNoteController</servlet-name>
         <url-pattern>/RemoveCareNoteController</url-pattern>
     </servlet-mapping>
-    <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
-    </session-config>
-    <welcome-file-list>
-        <welcome-file>login.jsp</welcome-file>
-    </welcome-file-list>
-    <servlet>
-        <servlet-name>TestPriceServlet</servlet-name>
-        <servlet-class>com.investorcare.controller.TestPriceServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>WatchListController</servlet-name>
-        <servlet-class>com.investorcare.controller.WatchListController</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>TestPriceServlet</servlet-name>
         <url-pattern>/test-price</url-pattern>
     </servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+    
+    <welcome-file-list>
+        <welcome-file>login.jsp</welcome-file>
+    </welcome-file-list>
+
 </web-app>
